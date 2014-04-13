@@ -66,7 +66,7 @@ namespace WOptiPng
             }
         }
 
-        public float? ReductionPercent
+        public double? ReductionPercent
         {
             get
             {
@@ -74,7 +74,7 @@ namespace WOptiPng
                 {
                     return null;
                 }
-                return (float)Math.Round((SizeBefore - SizeAfter.GetValueOrDefault()) / (double)SizeBefore * 100.0, 1);
+                return (SizeBefore - SizeAfter.GetValueOrDefault()) / (double)SizeBefore * 100.0;
             }
         }
 

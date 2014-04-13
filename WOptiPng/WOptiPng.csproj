@@ -73,6 +73,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BindableModel.cs" />
+    <Compile Include="Converters\PercentToStringConverter.cs" />
     <Compile Include="Converters\StatusToProgressConverter.cs" />
     <Compile Include="Converters\StatusToProgressIntermediateConverter.cs" />
     <Compile Include="Converters\StatusToProgressColorConverter.cs" />

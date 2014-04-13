@@ -29,6 +29,7 @@
         <cvts:StatusToProgressColorConverter x:Key="StatusToProgressColor" />
         <cvts:StatusToProgressIntermediateConverter x:Key="StatusToProgressIntermediate" />
         <cvts:StatusToProgressConverter x:Key="StatusToProgress" />
+        <cvts:PercentToStringConverter x:Key="PercentToString" />
 
         <Style x:Key="RightAlignedTextBlock" TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="5"/>
@@ -128,8 +129,9 @@
                 <DataGridTextColumn Header="Size After" Width="100" Binding="{Binding SizeAfter}"
                                      ElementStyle="{StaticResource RightAlignedTextBlock}"
                                     HeaderStyle="{StaticResource RightAlignedColumnHeader}" />
-                <DataGridTextColumn Header="Reduction, %" Width="120" Binding="{Binding ReductionPercent}"
-                                     ElementStyle="{StaticResource RightAlignedTextBlock}"
+                <DataGridTextColumn Header="Reduction" Width="100"
+                                    Binding="{Binding ReductionPercent, Converter={StaticResource PercentToString}}"
+                                    ElementStyle="{StaticResource RightAlignedTextBlock}"
                                     HeaderStyle="{StaticResource RightAlignedColumnHeader}" />
 
                 <DataGridTemplateColumn Header="Progress" Width="100" IsReadOnly="True">
