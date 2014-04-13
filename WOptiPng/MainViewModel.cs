@@ -202,7 +202,7 @@ namespace WOptiPng
                 {
                     foreach (var file in ofd.FileNames)
                     {
-                        _files.Add(new OptimizationProcess(file, _settings));
+                        AddFile(file);
                     }
                 }
             }));
