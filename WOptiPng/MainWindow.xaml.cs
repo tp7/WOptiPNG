@@ -23,7 +23,7 @@ namespace WOptiPng
                 if (_settingsPath == null)
                 {
                     var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    _settingsPath = Path.Combine(appdata, "OptiPngUi", "Settings.json");
+                    _settingsPath = Path.Combine(appdata, "WOptiPng", "Settings.json");
                 }
                 return _settingsPath;
             }
