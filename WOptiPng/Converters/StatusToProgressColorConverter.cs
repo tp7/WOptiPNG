@@ -4,16 +4,16 @@ using System.Windows.Media;
 
 namespace WOptiPng.Converters
 {
-    [ValueConversion(typeof(OptimizationProcessStatus), typeof(Brush))]
+    [ValueConversion(typeof (OptimizationProcessStatus), typeof (Brush))]
     public class StatusToProgressColorConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
             if (targetType != typeof (Brush))
+            {
                 throw new InvalidOperationException("The target must be a brush");
+            }
 
             switch ((OptimizationProcessStatus)value)
             {
@@ -31,7 +31,5 @@ namespace WOptiPng.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

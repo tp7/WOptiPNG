@@ -4,16 +4,16 @@ using System.Windows.Media;
 
 namespace WOptiPng.Converters
 {
-    [ValueConversion(typeof(OptimizationProcessStatus), typeof(double))]
+    [ValueConversion(typeof (OptimizationProcessStatus), typeof (double))]
     public class StatusToProgressConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
             if (targetType != typeof (double))
-                throw new InvalidOperationException("The target must be a int");
+            {
+                throw new InvalidOperationException("The target must be a double");
+            }
 
 
             switch ((OptimizationProcessStatus)value)
@@ -31,7 +31,5 @@ namespace WOptiPng.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

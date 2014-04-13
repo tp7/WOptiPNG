@@ -14,7 +14,7 @@ namespace WOptiPng.Converters
                 throw new InvalidOperationException("The target must be a string");
             }
 
-            return value == null ? null : string.Format("{0:n1}%", value);
+            return value == null ? null : string.Format(culture, "{0:n1}%", value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
