@@ -30,6 +30,7 @@
         <cvts:StatusToProgressIntermediateConverter x:Key="StatusToProgressIntermediate" />
         <cvts:StatusToProgressConverter x:Key="StatusToProgress" />
         <cvts:PercentToStringConverter x:Key="PercentToString" />
+        <cvts:SizeHumanizerConverter x:Key="SizeHumanizer" />
 
         <Style x:Key="RightAlignedTextBlock" TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="5"/>
@@ -123,11 +124,13 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Size Before" Width="100" Binding="{Binding SizeBefore}"
+                <DataGridTextColumn Header="Size Before" Width="100" 
+                                    Binding="{Binding SizeBefore, Converter={StaticResource SizeHumanizer}}"
                                     ElementStyle="{StaticResource RightAlignedTextBlock}"
                                     HeaderStyle="{StaticResource RightAlignedColumnHeader}" />
-                <DataGridTextColumn Header="Size After" Width="100" Binding="{Binding SizeAfter}"
-                                     ElementStyle="{StaticResource RightAlignedTextBlock}"
+                <DataGridTextColumn Header="Size After" Width="100" 
+                                    Binding="{Binding SizeAfter, Converter={StaticResource SizeHumanizer}}"
+                                    ElementStyle="{StaticResource RightAlignedTextBlock}"
                                     HeaderStyle="{StaticResource RightAlignedColumnHeader}" />
                 <DataGridTextColumn Header="Reduction" Width="100"
                                     Binding="{Binding ReductionPercent, Converter={StaticResource PercentToString}}"
