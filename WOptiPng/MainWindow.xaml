@@ -25,6 +25,7 @@
         <SolidColorBrush x:Key="DarkGrayBrush" Color="{StaticResource DarkGray}"/>
         <SolidColorBrush x:Key="LightGrayBrush" Color="{StaticResource LightGray}"/>
         <SolidColorBrush x:Key="ControlsDisabledBrush" Color="#81807E"/>
+        <SolidColorBrush x:Key="HighlightBrush" Color="White"/>
         <cvts:InverseBooleanConverter x:Key="InverseBool" />
         <cvts:StatusToProgressColorConverter x:Key="StatusToProgressColor" />
         <cvts:StatusToProgressIntermediateConverter x:Key="StatusToProgressIntermediate" />
