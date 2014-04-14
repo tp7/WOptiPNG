@@ -70,13 +70,13 @@
                 <Grid IsEnabled="{Binding IsFolderSelectEnabled}" Margin="0 5" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  />
-                        <ColumnDefinition Width="128" />
+                        <ColumnDefinition Width="118" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="12 2" Grid.Column="0" 
+                    <TextBox Margin="12 2 6 2" Grid.Column="0" 
                                  Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged}"
                                  controls:TextboxHelper.Watermark="Output directory"
                                  ToolTip="Output directory" />
-                    <Button Grid.Column="1" Margin="12 2" Width="100"
+                    <Button Grid.Column="1" Margin="6 2" Width="100"
                                 Command="{Binding SelectDirectoryCommand}">Select</Button>
                 </Grid>
                 <controls:ToggleSwitch IsChecked="{Binding OverwriteSource}" 
