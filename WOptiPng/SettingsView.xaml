@@ -8,8 +8,8 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="WOptiPng.SettingsView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="150">
-    <StackPanel Width="150" Margin="5" d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+             d:DesignHeight="300" d:DesignWidth="180">
+    <StackPanel Width="150" Margin="12" d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
         <Label Content="Optimization Level"/>
         <ComboBox SelectedItem="{Binding OptLevel}">
             <system:Int32>1</system:Int32>

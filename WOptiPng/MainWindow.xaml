@@ -6,7 +6,6 @@
         xmlns:cvts="clr-namespace:WOptiPng.Converters" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        Title="WOptiPng"
         TitleCaps="False"
         Background="#252525"
         Height="600"
@@ -14,7 +13,13 @@
         ResizeMode="CanResizeWithGrip"
         NonActiveGlowBrush="{x:Null}"
         Width="800">
-
+    
+    <controls:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <Label Margin="12 0" Padding="0 4" FontSize="15" Foreground="#B3B3B3">WOptiPng</Label>
+        </DataTemplate>
+    </controls:MetroWindow.TitleTemplate>
+    
     <Control.Resources>
         <Color x:Key="Background">#252525</Color>
         <Color x:Key="DarkGray">#3D3D3D</Color>
@@ -52,11 +57,11 @@
         <Border Grid.Row="0" BorderThickness="0 0 0 5">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="263*"/>
-                    <ColumnDefinition Width="98*" MaxWidth="100"/>
-                    <ColumnDefinition Width="98*" MaxWidth="100"/>
+                    <ColumnDefinition Width="118"/>
+                    <ColumnDefinition Width="118"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="118"/>
+                    <ColumnDefinition Width="118"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -65,37 +70,37 @@
                 <Grid IsEnabled="{Binding IsFolderSelectEnabled}" Margin="0 5" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="128" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="5 2" Grid.Column="0" 
+                    <TextBox Margin="12 2" Grid.Column="0" 
                                  Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged}"
                                  controls:TextboxHelper.Watermark="Output directory"
                                  ToolTip="Output directory" />
-                    <Button Grid.Column="1" Margin="5 2" Width="85"
+                    <Button Grid.Column="1" Margin="12 2" Width="100"
                                 Command="{Binding SelectDirectoryCommand}">Select</Button>
                 </Grid>
                 <controls:ToggleSwitch IsChecked="{Binding OverwriteSource}" 
                                        IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
                                        Grid.Column="3" Grid.Row="0" 
                                        VerticalAlignment="Center"
-                                       Header="{x:Null}" Margin="5,8" OnLabel="Overwrite source" 
+                                       Header="{x:Null}" Margin="12 8" OnLabel="Overwrite source" 
                                        OffLabel="Output to folder" Grid.ColumnSpan="2" />
 
-                <Button Grid.Column="0" Grid.Row="1" 
-                        Margin="10 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
+                <Button Grid.Column="0" Grid.Row="1" Width="100"
+                        Margin="12 5 6 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
                         Command="{Binding AddFilesCommand}">Add files</Button>
-                <Button Grid.Column="1" Grid.Row="1" 
-                        Margin="10 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
+                <Button Grid.Column="1" Grid.Row="1" Width="100"
+                        Margin="6 5 12 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
                         Command="{Binding ClearFilesCommand}">Clear files</Button>
-                <Button Grid.Column="3" Grid.Row="1" Margin="6,5" Width="85"
+                <Button Grid.Column="3" Grid.Row="1" Margin="12 5 6 5" Width="100"
                         ToolTipService.ShowOnDisabled="True" ToolTip="{Binding StartButtonTooltip}" 
                         IsEnabled="{Binding CanStartProcessing}" Command="{Binding StartCommand}">Start</Button>
-                <Button Grid.Column="4" Grid.Row="1" Margin="6,5" Width="85"
+                <Button Grid.Column="4" Grid.Row="1" Margin="6 5 12 5" Width="100"
                         IsEnabled="{Binding InProgress}" Command="{Binding CancelCommand}">Cancel</Button>
             </Grid>
         </Border>
         <DataGrid Grid.Row="1" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" 
-                  AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False"
+                  AutoGenerateColumns="False" IsReadOnly="True" 
                   ItemsSource="{Binding Files}" HeadersVisibility="Column" BorderThickness="0, 5, 0, 0"
                   VerticalScrollBarVisibility="Auto" 
                   AllowDrop="True"
@@ -121,9 +126,15 @@
                 <DataGridTextColumn Header="Path" Width="100*" Binding="{Binding InputPath}" >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="Margin" Value="12 5"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}" 
+                               BasedOn="{StaticResource MetroDataGridColumnHeader}">
+                            <Setter Property="Padding" Value="12 4 4 7"></Setter>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Size Before" Width="100" 
                                     Binding="{Binding SizeBefore, Converter={StaticResource SizeHumanizer}}"
@@ -143,12 +154,12 @@
                         <Style TargetType="{x:Type DataGridColumnHeader}" 
                                BasedOn="{StaticResource MetroDataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Right" />
-                            <Setter Property="Padding" Value="0 0 10 4"></Setter>
+                            <Setter Property="Padding" Value="0 0 12 4"></Setter>
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <controls:MetroProgressBar Margin="10" Maximum="100"
+                            <controls:MetroProgressBar Margin="12" Maximum="100"
                                                        IsIndeterminate="{Binding Status, Converter={StaticResource StatusToProgressIntermediate}}" 
                                                        Value="{Binding Status, Converter={StaticResource StatusToProgress}}" 
                                                        Foreground="{Binding Status, Converter={StaticResource StatusToProgressColor}}">
