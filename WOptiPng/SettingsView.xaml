@@ -9,22 +9,35 @@
              x:Class="WOptiPng.SettingsView" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="180">
-    <StackPanel Width="150" Margin="12" d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
-        <Label Content="Optimization Level"/>
-        <ComboBox SelectedItem="{Binding OptLevel}">
-            <system:Int32>1</system:Int32>
-            <system:Int32>2</system:Int32>
-            <system:Int32>3</system:Int32>
-            <system:Int32>4</system:Int32>
-            <system:Int32>5</system:Int32>
-            <system:Int32>6</system:Int32>
-            <system:Int32>7</system:Int32>
-            <system:Int32>8</system:Int32>
-        </ComboBox>
-        <Label Content="Threads" />
-        <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
-        <Label Content="Process priority" />
-        <ComboBox SelectedItem="{Binding ProcessPriority}" Name="AllowedPriorities" />
-        <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <StackPanel Width="150" Margin="12" Grid.Row="0"
+                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+            <Label Content="Optimization Level"/>
+            <ComboBox SelectedItem="{Binding OptLevel}">
+                <system:Int32>1</system:Int32>
+                <system:Int32>2</system:Int32>
+                <system:Int32>3</system:Int32>
+                <system:Int32>4</system:Int32>
+                <system:Int32>5</system:Int32>
+                <system:Int32>6</system:Int32>
+                <system:Int32>7</system:Int32>
+                <system:Int32>8</system:Int32>
+            </ComboBox>
+            <Label Content="Threads" />
+            <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
+            <Label Content="Process priority" />
+            <ComboBox SelectedItem="{Binding ProcessPriority}" Name="AllowedPriorities" />
+            <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Margin="12 0 12 12" VerticalAlignment="Center">           
+            <Hyperlink NavigateUri="http://optipng.sourceforge.net/" RequestNavigate="HandleNavigationRequest">
+                OptiPNG homepage
+            </Hyperlink>
+        </TextBlock>
+    </Grid>
 </UserControl>

@@ -37,5 +37,11 @@ namespace WOptiPng
             AllowedPriorities.Items.Add(ProcessPriorityClass.AboveNormal);
             AllowedPriorities.Items.Add(ProcessPriorityClass.High);
         }
+
+        private void HandleNavigationRequest(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
     }
 }
