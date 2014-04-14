@@ -169,7 +169,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label HorizontalAlignment="Right" Grid.Row="2" Margin="15 0" Foreground="DarkGray" Content="{Binding StatusMessage.Message}" />
+        <Label HorizontalAlignment="Right" Grid.Row="2" Margin="15 0" Foreground="DarkGray" Content="{Binding StatusMessage}" />
 
     </Grid>
 

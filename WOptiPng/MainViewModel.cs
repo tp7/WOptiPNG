@@ -154,7 +154,7 @@ namespace WOptiPng
 
         public object StartButtonTitle { get { return InProgress ? "Cancel" : "Start"; } }
 
-        public TimedMessage StatusMessage { get; set; }
+        public string StatusMessage { get; set; }
 
         public bool IsFolderSelectEnabled { get { return !(InProgress || OverwriteSource); }}
 
@@ -253,7 +253,6 @@ namespace WOptiPng
         public MainViewModel(Settings settings)
         {
             _settings = settings;
-            StatusMessage = new TimedMessage();
             _files = new ObservableCollection<OptimizationProcess>();
             Files = new ReadOnlyObservableCollection<OptimizationProcess>(_files);
             _files.CollectionChanged += (sender, e) => OnPropertyChanged("StartButtonEnabled");
