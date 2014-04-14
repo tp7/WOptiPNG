@@ -237,7 +237,12 @@ namespace WOptiPng
         {
             get
             {
-                return _clearFilesCommand ?? (_clearFilesCommand = new RelayCommand(obj => _files.Clear()));
+                return _clearFilesCommand ?? (_clearFilesCommand = new RelayCommand(obj =>
+                {
+                    _files.Clear();
+                    _saved = 0;
+                    OnPropertyChanged("StatusMessage");
+                }));
             }
         }
 
