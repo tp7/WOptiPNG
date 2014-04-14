@@ -30,7 +30,7 @@ namespace WOptiPng
         public static int Optimize(string inputPath, string outputPath, Settings settings,
             Action<string> standardErrorCallback)
         {
-            var p = new Process
+            using (var p = new Process
             {
                 StartInfo = new ProcessStartInfo("optipng")
                 {
@@ -39,19 +39,21 @@ namespace WOptiPng
                     Arguments = FormatArguments(outputPath, inputPath, settings.OptLevel),
                     RedirectStandardError = true,
                 }
-            };
-            p.Start();
-            p.PriorityClass = settings.ProcessPriority;
-            p.ErrorDataReceived += (sender, e) =>
+            })
             {
-                if (standardErrorCallback != null)
+                p.Start();
+                p.PriorityClass = settings.ProcessPriority;
+                p.ErrorDataReceived += (sender, e) =>
                 {
-                    standardErrorCallback(e.Data);
-                }
-            };
-            p.BeginErrorReadLine();
-            p.WaitForExit();
-            return p.ExitCode;
+                    if (standardErrorCallback != null)
+                    {
+                        standardErrorCallback(e.Data);
+                    }
+                };
+                p.BeginErrorReadLine();
+                p.WaitForExit();
+                return p.ExitCode;
+            }
         }
 
         private static string FormatArguments(string outputPath, string inputPath, int optLevel)
