@@ -126,6 +126,7 @@ namespace WOptiPng
                 _inProgress = value;
                 OnPropertyChanged();
                 OnPropertyChanged("IsFolderSelectEnabled");
+                OnPropertyChanged("StartButtonEnabled");
                 OnPropertyChanged("StartButtonTitle");
                 OnPropertyChanged("StartButtonTooltip");
             }
