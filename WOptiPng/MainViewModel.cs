@@ -154,7 +154,17 @@ namespace WOptiPng
 
         public object StartButtonTitle { get { return InProgress ? "Cancel" : "Start"; } }
 
-        public string StatusMessage { get; set; }
+        public string StatusMessage
+        {
+            get
+            {
+                if (_saved == 0)
+                {
+                    return null;
+                }
+                return string.Format("Saved {0:###,###,###.##} KB", _saved / 1024.0f);
+            }
+        }
 
         public bool IsFolderSelectEnabled { get { return !(InProgress || OverwriteSource); }}
 
@@ -170,6 +180,8 @@ namespace WOptiPng
 
         private readonly ObservableCollection<OptimizationProcess> _files;
         public ReadOnlyObservableCollection<OptimizationProcess> Files { get; set; }
+
+        private long _saved = 0;
 
         #endregion
 
@@ -273,7 +285,16 @@ namespace WOptiPng
             {
                 try
                 {
-                    var actions = Files.Where(f=>!f.IsDone).Select(f => (Action)(f.Process));
+                    var actions = Files.Where(f => !f.IsDone).Select(f => (Action)delegate
+                    {
+                        f.Process();
+                        if (f.SizeAfter != null)
+                        {
+                            var diff = f.SizeBefore - f.SizeAfter.GetValueOrDefault();
+                            Interlocked.Add(ref _saved, diff);
+                            OnPropertyChanged("StatusMessage");
+                        }
+                    });
                     //this method keeps processing order
                     Parallel.Invoke(new ParallelOptions
                     {
@@ -303,6 +324,11 @@ namespace WOptiPng
             if (file.Status != OptimizationProcessStatus.InProgress)
             {
                 _files.Remove(file);
+                if (file.SizeAfter != null)
+                {
+                    _saved -= file.SizeBefore - file.SizeAfter.GetValueOrDefault();
+                    OnPropertyChanged("StatusMessage");
+                }
             }
         }
 
