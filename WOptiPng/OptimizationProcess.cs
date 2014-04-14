@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace WOptiPng
 {
@@ -111,13 +113,49 @@ namespace WOptiPng
             SizeBefore = new FileInfo(inputPath).Length;
         }
 
+        private static readonly Regex OptiPngTry = new Regex(@"\s*zc\s+=\s+\d+\s+zm\s+=\s+\d+\s+zs\s+=\s+\d+\s+f\s+=\s+\d+.*", RegexOptions.Compiled);
+
         public void Process()
         {
             var tempFile = Path.GetTempFileName();
             try
             {
                 Status = OptimizationProcessStatus.InProgress;
-                var status = OptiPngWrapper.Optimize(InputPath, tempFile, _settings, (str) => Log += str + '\n');
+                Log = null;
+
+                int triesCount = 0;
+                int lastLineLength = 0;
+                var status = OptiPngWrapper.Optimize(InputPath, tempFile, _settings, (str) =>
+                {
+                    if (str == null)
+                    {
+                        return;
+                    }
+
+                    var addition = str + '\n';
+                    if (OptiPngTry.IsMatch(str))
+                    {
+                        if (triesCount < 14)
+                        {
+                            Log += addition;
+                        }
+                        else if (triesCount == 14)
+                        {
+                            var spaces = new string(addition.TakeWhile(char.IsWhiteSpace).ToArray());
+                            Log += spaces + "...\n" + addition;
+                        }
+                        else
+                        {
+                            Log = Log.Remove(Log.Length - lastLineLength) + addition;
+                        }
+                        triesCount++;
+                        lastLineLength = addition.Length;
+                    }
+                    else
+                    {
+                        Log += addition;
+                    }
+                });
                 
                 if (status == 0)
                 {
