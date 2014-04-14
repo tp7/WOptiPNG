@@ -36,7 +36,7 @@ namespace WOptiPng
                 _settings.OverwriteSource = value;
                 OnPropertyChanged();
                 OnPropertyChanged("IsFolderSelectEnabled");
-                OnPropertyChanged("CanStartProcessing");
+                OnPropertyChanged("StartButtonEnabled");
                 OnPropertyChanged("StartButtonTooltip");
             }
         }
@@ -52,7 +52,7 @@ namespace WOptiPng
                 }
                 _settings.OutputDirectory = value;
                 OnPropertyChanged();
-                OnPropertyChanged("CanStartProcessing");
+                OnPropertyChanged("StartButtonEnabled");
                 OnPropertyChanged("StartButtonTooltip");
             }
         }
@@ -126,7 +126,7 @@ namespace WOptiPng
                 _inProgress = value;
                 OnPropertyChanged();
                 OnPropertyChanged("IsFolderSelectEnabled");
-                OnPropertyChanged("CanStartProcessing");
+                OnPropertyChanged("StartButtonTitle");
                 OnPropertyChanged("StartButtonTooltip");
             }
         }
@@ -135,10 +135,6 @@ namespace WOptiPng
         {
             get
             {
-                if (InProgress)
-                {
-                    return "Already in progress";
-                }
                 if (Files.Count == 0)
                 {
                     return "No files selected";
@@ -151,20 +147,21 @@ namespace WOptiPng
                 {
                     return "No output path selected";
                 }
-                return "Everything is OK, you can start";
+                return null;
             }
         }
+
+        public object StartButtonTitle { get { return InProgress ? "Cancel" : "Start"; } }
 
         public TimedMessage StatusMessage { get; set; }
 
         public bool IsFolderSelectEnabled { get { return !(InProgress || OverwriteSource); }}
 
-        public bool CanStartProcessing
+        public bool StartButtonEnabled
         {
             get
             {
-                return !InProgress &&
-                       Files.Count > 0 &&
+                return Files.Count > 0 &&
                        Files.Any(f => !f.IsDone) &&
                        (OverwriteSource || !string.IsNullOrWhiteSpace(OutputDirectory));
             }
@@ -231,22 +228,22 @@ namespace WOptiPng
             }
         }
 
-        
-        private RelayCommand _startCommand;
-        public ICommand StartCommand
+        private RelayCommand _startOrCancelCommand;
+        public ICommand StartOrCancelCommand
         {
             get
             {
-                return _startCommand ?? (_startCommand = new RelayCommand(obj => StartProcessing()));
-            }
-        }
-
-        private RelayCommand _cancelCommand;
-        public ICommand CancelCommand
-        {
-            get
-            {
-                return _cancelCommand ?? (_cancelCommand = new RelayCommand(obj => CancelProcessing()));
+                return _startOrCancelCommand ?? (_startOrCancelCommand = new RelayCommand(obj =>
+                {
+                    if (InProgress)
+                    {
+                        CancelProcessing();
+                    }
+                    else
+                    {
+                        StartProcessing();
+                    }
+                }));
             }
         }
 
@@ -258,7 +255,7 @@ namespace WOptiPng
             StatusMessage = new TimedMessage();
             _files = new ObservableCollection<OptimizationProcess>();
             Files = new ReadOnlyObservableCollection<OptimizationProcess>(_files);
-            _files.CollectionChanged += (sender, e) => OnPropertyChanged("CanStartProcessing");
+            _files.CollectionChanged += (sender, e) => OnPropertyChanged("StartButtonEnabled");
         }
 
         private CancellationTokenSource _cancelTokenSource;

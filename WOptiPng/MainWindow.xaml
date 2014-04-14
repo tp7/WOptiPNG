@@ -92,11 +92,11 @@
                 <Button Grid.Column="1" Grid.Row="1" Width="100"
                         Margin="6 5 12 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
                         Command="{Binding ClearFilesCommand}">Clear files</Button>
-                <Button Grid.Column="3" Grid.Row="1" Margin="12 5 6 5" Width="100"
-                        ToolTipService.ShowOnDisabled="True" ToolTip="{Binding StartButtonTooltip}" 
-                        IsEnabled="{Binding CanStartProcessing}" Command="{Binding StartCommand}">Start</Button>
                 <Button Grid.Column="4" Grid.Row="1" Margin="6 5 12 5" Width="100"
-                        IsEnabled="{Binding InProgress}" Command="{Binding CancelCommand}">Cancel</Button>
+                        Content="{Binding StartButtonTitle}"
+                        ToolTip="{Binding StartButtonTooltip}"
+                        IsEnabled="{Binding StartButtonEnabled}" 
+                        Command="{Binding StartOrCancelCommand}" />
             </Grid>
         </Border>
         <DataGrid Grid.Row="1" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" 
