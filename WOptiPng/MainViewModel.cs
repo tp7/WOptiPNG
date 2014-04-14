@@ -99,6 +99,20 @@ namespace WOptiPng
             }
         }
 
+        public ProcessPriorityClass ProcessPriority
+        {
+            get { return _settings.ProcessPriority; }
+            set
+            {
+                if (value == _settings.ProcessPriority)
+                {
+                    return;
+                }
+                _settings.ProcessPriority = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
 

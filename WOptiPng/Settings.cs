@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WOptiPng
 {
@@ -10,6 +11,7 @@ namespace WOptiPng
             OverwriteSource = true;
             Threads = DefaultThreads;
             OptLevel = DefaultOptLevel;
+            ProcessPriority = ProcessPriorityClass.Normal;
         }
 
         public bool OverwriteSource { get; set; }
@@ -17,6 +19,7 @@ namespace WOptiPng
         public int Threads { get; set; }
         public int OptLevel { get; set; }
         public bool IncludeSubfolders { get; set; }
+        public ProcessPriorityClass ProcessPriority { get; set; }
 
         public static int DefaultThreads { get { return Environment.ProcessorCount; } }
         public static int DefaultOptLevel { get { return 2; } }

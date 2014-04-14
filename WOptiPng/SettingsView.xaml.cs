@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,13 @@ namespace WOptiPng
             {
                 ThreadsBox.Items.Add(i);
             }
+
+            //don't allow real time because that's just wrong
+            AllowedPriorities.Items.Add(ProcessPriorityClass.Idle);
+            AllowedPriorities.Items.Add(ProcessPriorityClass.BelowNormal);
+            AllowedPriorities.Items.Add(ProcessPriorityClass.Normal);
+            AllowedPriorities.Items.Add(ProcessPriorityClass.AboveNormal);
+            AllowedPriorities.Items.Add(ProcessPriorityClass.High);
         }
     }
 }

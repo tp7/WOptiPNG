@@ -37,10 +37,11 @@ namespace WOptiPng
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     Arguments = FormatArguments(outputPath, inputPath, settings.OptLevel),
-                    RedirectStandardError = true
+                    RedirectStandardError = true,
                 }
             };
             p.Start();
+            p.PriorityClass = settings.ProcessPriority;
             p.ErrorDataReceived += (sender, e) =>
             {
                 if (standardErrorCallback != null)

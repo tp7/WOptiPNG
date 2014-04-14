@@ -16,7 +16,7 @@
     
     <controls:MetroWindow.TitleTemplate>
         <DataTemplate>
-            <Label Margin="12 0" Padding="0 4" FontSize="15" Foreground="#B3B3B3">WOptiPng</Label>
+            <Label Margin="12 0" Padding="0 4" FontSize="15" Foreground="#838383">WOptiPng</Label>
         </DataTemplate>
     </controls:MetroWindow.TitleTemplate>
     

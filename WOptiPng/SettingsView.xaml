@@ -23,6 +23,8 @@
         </ComboBox>
         <Label Content="Threads" />
         <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
+        <Label Content="Process priority" />
+        <ComboBox SelectedItem="{Binding ProcessPriority}" Name="AllowedPriorities" />
         <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
     </StackPanel>
 </UserControl>

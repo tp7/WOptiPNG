@@ -158,9 +158,10 @@ namespace WOptiPng
                     Status = OptimizationProcessStatus.Error;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Status = OptimizationProcessStatus.Error;
+                Log = e.Message;
             }
             finally
             {
