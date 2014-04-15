@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     public class RelayCommand : ICommand
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace WOptiPng.Converters
+namespace WOptiPNG.Converters
 {
     [ValueConversion(typeof (long), typeof (string))]
     public class SizeHumanizerConverter : IValueConverter

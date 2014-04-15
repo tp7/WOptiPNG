@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     public static class OptiPngWrapper
     {

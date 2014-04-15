@@ -9,7 +9,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
 using Path = System.IO.Path;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     public partial class MainWindow
     {

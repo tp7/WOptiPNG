@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace WOptiPng.Converters
+namespace WOptiPNG.Converters
 {
     [ValueConversion(typeof (double), typeof (string))]
     public class PercentToStringConverter : IValueConverter

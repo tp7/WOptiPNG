@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using WOptiPng.Properties;
+using WOptiPNG.Properties;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     //todo: probably separate this into two view models
     public class MainViewModel : BindableModel

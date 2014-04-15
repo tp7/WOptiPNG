@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using WOptiPng.Annotations;
+using WOptiPNG.Annotations;
 
-namespace WOptiPng
+namespace WOptiPNG
 {
     public abstract class BindableModel : INotifyPropertyChanged
     {

@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace WOptiPng.Converters
+namespace WOptiPNG.Converters
 {
     [ValueConversion(typeof (OptimizationProcessStatus), typeof (Brush))]
     public class StatusToProgressColorConverter : IValueConverter
