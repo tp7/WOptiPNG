@@ -156,7 +156,7 @@ namespace WOptiPng
             e.Handled = true;
         }
 
-        private void HandleFileEnterPress(object sender, KeyEventArgs e)
+        private void HandleFileEnterKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter)
             {
@@ -166,6 +166,14 @@ namespace WOptiPng
             var op = (OptimizationProcess)row.Item;
             Process.Start(new ProcessStartInfo(op.InputPath));
             e.Handled = true;
+        }
+
+        private void IgnoreFileEnterKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+            }
         }
     }
 }

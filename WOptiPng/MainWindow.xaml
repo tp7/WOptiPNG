@@ -111,7 +111,8 @@
                     <Style.Setters>
                         <Setter Property="ToolTip" Value="{Binding Log}" />
                         <EventSetter Event="MouseDoubleClick" Handler="HandleFileDoubleClick" />
-                        <EventSetter Event="PreviewKeyUp" Handler="HandleFileEnterPress" />
+                        <EventSetter Event="PreviewKeyDown" Handler="IgnoreFileEnterKeyDown" />
+                        <EventSetter Event="PreviewKeyUp" Handler="HandleFileEnterKeyUp" />
                     </Style.Setters>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
