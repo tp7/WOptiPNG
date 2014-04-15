@@ -28,7 +28,7 @@ namespace WOptiPNG
             return true;
         }
 
-        public static int Optimize(string inputPath, string outputPath, Settings settings,
+        public static int Optimize(string filePath, Settings settings,
             Action<string> standardErrorCallback)
         {
             using (var p = new Process
@@ -37,7 +37,7 @@ namespace WOptiPNG
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Arguments = FormatArguments(outputPath, inputPath, settings.OptLevel),
+                    Arguments = FormatArguments(filePath, settings.OptLevel),
                     RedirectStandardError = true,
                 }
             })
@@ -57,10 +57,10 @@ namespace WOptiPNG
             }
         }
 
-        private static string FormatArguments(string outputPath, string inputPath, int optLevel)
+        private static string FormatArguments(string outputPath, int optLevel)
         {
-            return string.Format(CultureInfo.InvariantCulture, "-clobber -preserve -fix -out \"{0}\" -o {1} \"{2}\"",
-                outputPath, optLevel, inputPath);
+            return string.Format(CultureInfo.InvariantCulture, "-clobber -preserve -fix -o {0} \"{1}\"",
+                optLevel, outputPath);
         }
     }
 }

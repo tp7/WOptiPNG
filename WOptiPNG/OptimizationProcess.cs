@@ -124,9 +124,11 @@ namespace WOptiPNG
                 Status = OptimizationProcessStatus.InProgress;
                 Log = null;
 
+                File.Copy(InputPath, tempFile, true);
+
                 int triesCount = 0;
                 int lastLineLength = 0;
-                var status = OptiPngWrapper.Optimize(InputPath, tempFile, _settings, (str) =>
+                var status = OptiPngWrapper.Optimize(tempFile, _settings, (str) =>
                 {
                     if (str == null)
                     {
