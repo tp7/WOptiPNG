@@ -195,17 +195,17 @@ namespace WOptiPng
             {
                 return _selectDirectoryCommand ?? (_selectDirectoryCommand = new RelayCommand(obj =>
                 {
-
-                    var ofd = new CommonOpenFileDialog
+                    using (var ofd = new CommonOpenFileDialog
                     {
                         IsFolderPicker = true,
                         InitialDirectory = OutputDirectory,
                         Multiselect = false
-                    };
-
-                    if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
+                    })
                     {
-                        OutputDirectory = ofd.FileName;
+                        if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
+                        {
+                            OutputDirectory = ofd.FileName;
+                        }
                     }
                 }));
             }
