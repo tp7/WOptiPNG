@@ -99,7 +99,7 @@
                         Command="{Binding StartOrCancelCommand}" />
             </Grid>
         </Border>
-        <DataGrid Grid.Row="1" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" 
+        <DataGrid Grid.Row="1"  CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" 
                   AutoGenerateColumns="False" IsReadOnly="True" 
                   ItemsSource="{Binding Files}" HeadersVisibility="Column" BorderThickness="0, 5, 0, 0"
                   VerticalScrollBarVisibility="Auto" 
@@ -110,6 +110,8 @@
                 <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
                     <Style.Setters>
                         <Setter Property="ToolTip" Value="{Binding Log}" />
+                        <EventSetter Event="MouseDoubleClick" Handler="HandleFileDoubleClick" />
+                        <EventSetter Event="PreviewKeyUp" Handler="HandleFileEnterPress" />
                     </Style.Setters>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

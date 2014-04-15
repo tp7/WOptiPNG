@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
@@ -144,6 +145,27 @@ namespace WOptiPng
         {
             var attrs = File.GetAttributes(path);
             return (attrs & FileAttributes.Directory) == FileAttributes.Directory;
+        }
+
+        private void HandleFileDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var row = (DataGridRow)sender;
+            var op = (OptimizationProcess)row.Item;
+
+            Process.Start(new ProcessStartInfo(op.InputPath));
+            e.Handled = true;
+        }
+
+        private void HandleFileEnterPress(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
+            var row = (DataGridRow)sender;
+            var op = (OptimizationProcess)row.Item;
+            Process.Start(new ProcessStartInfo(op.InputPath));
+            e.Handled = true;
         }
     }
 }
