@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -162,7 +163,7 @@ namespace WOptiPng
                 {
                     return null;
                 }
-                return string.Format("Saved {0:###,###,###.##} KB", _saved / 1024.0f);
+                return string.Format(CultureInfo.CurrentCulture, "Saved {0:###,###,###.##} KB", _saved/1024.0f);
             }
         }
 
@@ -179,7 +180,7 @@ namespace WOptiPng
         }
 
         private readonly ObservableCollection<OptimizationProcess> _files;
-        public ReadOnlyObservableCollection<OptimizationProcess> Files { get; set; }
+        public ReadOnlyObservableCollection<OptimizationProcess> Files { get; private set; }
 
         private long _saved = 0;
 

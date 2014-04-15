@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace WOptiPng
 {
@@ -58,7 +59,8 @@ namespace WOptiPng
 
         private static string FormatArguments(string outputPath, string inputPath, int optLevel)
         {
-            return string.Format("-clobber -preserve -fix -out \"{0}\" -o {1} \"{2}\"", outputPath, optLevel, inputPath);
+            return string.Format(CultureInfo.InvariantCulture, "-clobber -preserve -fix -out \"{0}\" -o {1} \"{2}\"",
+                outputPath, optLevel, inputPath);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -173,7 +174,7 @@ namespace WOptiPng
                             var newPath = Path.Combine(_settings.OutputDirectory, oldName);
                             if (File.Exists(newPath))
                             {
-                                Log += string.Format("File {0} already exists", newPath);
+                                Log += string.Format(CultureInfo.CurrentCulture, "File {0} already exists", newPath);
                                 Status = OptimizationProcessStatus.Error;
                             }
                             else
@@ -188,7 +189,7 @@ namespace WOptiPng
                     {
                         SizeAfter = SizeBefore;
                         Status = OptimizationProcessStatus.DoneButSizeIsLarger;
-                        Log += string.Format("Size after optimization is larger than before");
+                        Log += "Size after optimization is larger than before";
                     }
                 }
                 else
