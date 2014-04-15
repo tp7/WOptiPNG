@@ -58,7 +58,7 @@ namespace WOptiPng
 
         private static string FormatArguments(string outputPath, string inputPath, int optLevel)
         {
-            return string.Format("-clobber -preserve -out \"{0}\" -o {1} \"{2}\"", outputPath, optLevel, inputPath);
+            return string.Format("-clobber -preserve -fix -out \"{0}\" -o {1} \"{2}\"", outputPath, optLevel, inputPath);
         }
     }
 }
