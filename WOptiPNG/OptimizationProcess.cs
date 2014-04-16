@@ -156,6 +156,7 @@ namespace WOptiPNG
                     }
                     else
                     {
+                        triesCount = 0;
                         Log += addition;
                     }
                 });
