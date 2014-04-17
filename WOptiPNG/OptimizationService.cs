@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace WOptiPNG
 {
-    public class OptimizationService
+    public class OptimizationService : ServiceBase
     {
         private readonly ConcurrentDictionary<FileSystemWatcher, WatchedDirectory> _watchers = new ConcurrentDictionary<FileSystemWatcher, WatchedDirectory>();
         private readonly ConcurrentQueue<string> _filesToProcess = new ConcurrentQueue<string>();
@@ -17,7 +20,7 @@ namespace WOptiPNG
             _settings = Settings.ReadFromFile();
         }
 
-        public void Run()
+        protected override void OnStart(string[] args)
         {
             if (_settings.WatchedFolders == null || _settings.WatchedFolders.Count == 0)
             {
@@ -25,13 +28,20 @@ namespace WOptiPNG
             }
             foreach (var folder in _settings.WatchedFolders)
             {
+                Trace.WriteLine(folder.Path);
                 _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
             }
+            base.OnStart(args);
+        }
 
-            while (true)
+        protected override void OnStop()
+        {
+            foreach (var watcher in _watchers.Keys)
             {
-                Thread.Sleep(1000); //do nothing yo
+                watcher.Dispose();
             }
+
+            base.OnStop();
         }
 
         private FileSystemWatcher CreatePngWatcher(string path, bool includeSubfolders)
@@ -46,6 +56,7 @@ namespace WOptiPNG
 
         private void FileWatcherError(object sender, ErrorEventArgs e)
         {
+            Trace.WriteLine("Got watcher error");
             var watcher = (FileSystemWatcher)sender;
             watcher.Dispose();
 
@@ -64,6 +75,7 @@ namespace WOptiPNG
 
         private void PngFileCreated(object sender, FileSystemEventArgs e)
         {
+            Trace.WriteLine("File created");
             _filesToProcess.Enqueue(e.FullPath);
 
             if (_runningTasksCount >= 2)

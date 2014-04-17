@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace WOptiPNG
 {
@@ -83,40 +84,34 @@ namespace WOptiPNG
             {
                 Directory.CreateDirectory(folder);
             }
-            var serializer = new DataContractJsonSerializer(typeof(Settings));
-
-            using (var stream = File.OpenWrite(SettingsPath))
+            using (var writter = new StreamWriter(SettingsPath))
             {
-                serializer.WriteObject(stream, this);
-                stream.SetLength(stream.Position);
+                var str = JsonConvert.SerializeObject(this, Formatting.Indented);
+                writter.Write(str);
             }
         }
 
         private static string _settingsPath;
         private static string SettingsPath
         {
-            get { return _settingsPath ?? (_settingsPath = Path.Combine(ApplicationDataPath, "Settings.json")); }
+            get { return _settingsPath ?? (_settingsPath = Path.Combine(ApplicationDataPath, "settings.json")); }
         }
 
         public static string ApplicationDataPath
         {
             get
             {
-                var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var appdata = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                 return Path.Combine(appdata, "WOptiPng");
             }
         }
 
         public static Settings ReadFromFile()
         {
-            var serializer = new DataContractJsonSerializer(typeof (Settings));
-
             if (File.Exists(SettingsPath))
             {
-                using (var stream = File.OpenRead(SettingsPath))
-                {
-                    return (Settings)serializer.ReadObject(stream);
-                }
+                var text = File.ReadAllText(SettingsPath);
+                return JsonConvert.DeserializeObject<Settings>(text);
             }
             var settings = new Settings();
             settings.WriteToFile();
