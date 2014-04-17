@@ -102,6 +102,12 @@ namespace WOptiPNG
                 string path;
                 while (_filesToProcess.TryDequeue(out path))
                 {
+                    if ((DateTime.UtcNow - File.GetLastWriteTimeUtc(path)) < TimeSpan.FromMilliseconds(500))
+                    {
+                        _filesToProcess.Enqueue(path);
+                        Thread.Sleep(500);
+                        continue;
+                    }
                     ProcessFile(path, _settings);
                     Trace.WriteLine(string.Format("Successfully optimized file {0}", path));
                 }
