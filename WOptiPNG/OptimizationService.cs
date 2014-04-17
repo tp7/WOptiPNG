@@ -40,7 +40,6 @@ namespace WOptiPNG
             }
             foreach (var folder in _settings.WatchedFolders)
             {
-                Trace.WriteLine(folder.Path);
                 _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
             }
             base.OnStart(args);
@@ -68,7 +67,7 @@ namespace WOptiPNG
 
         private void FileWatcherError(object sender, ErrorEventArgs e)
         {
-            Trace.WriteLine("Got watcher error");
+            
             var watcher = (FileSystemWatcher)sender;
             watcher.Dispose();
 
@@ -76,10 +75,12 @@ namespace WOptiPNG
             if (_watchers.TryRemove(watcher, out folder))
             {
                 _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
+                Trace.WriteLine(string.Format("Watcher error on folder {0}. Error: {1}", folder.Path,
+                    e.GetException().Message));
             }
             else
             {
-                Trace.WriteLine("Couldn't remove watcher");
+                Trace.WriteLine(string.Format("Couldn't remove watcher, error: {0}", e.GetException().Message));
             }
         }
 
@@ -87,7 +88,6 @@ namespace WOptiPNG
 
         private void PngFileCreated(object sender, FileSystemEventArgs e)
         {
-            Trace.WriteLine("File created");
             _filesToProcess.Enqueue(e.FullPath);
 
             if (_runningTasksCount >= 2)
