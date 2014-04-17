@@ -35,7 +35,9 @@ namespace WOptiPNG
 
         //windows service settings
         public ICollection<WatchedDirectory> WatchedFolders { get; set; }
-        public int BackgroundThreads { get; set; }
+        public int ServiceThreads { get; set; }
+        public ProcessPriorityClass ServiceProcessPriority { get; set; }
+        public int ServiceOptimizationLevel { get; set; }
 
         public bool SettingsValid()
         {

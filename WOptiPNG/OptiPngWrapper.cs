@@ -28,7 +28,9 @@ namespace WOptiPNG
             return true;
         }
 
-        public static int Optimize(string filePath, Settings settings,
+        public static int Optimize(string filePath,
+            int optimizationLevel,
+            ProcessPriorityClass priority,
             Action<string> standardErrorCallback)
         {
             using (var p = new Process
@@ -37,13 +39,13 @@ namespace WOptiPNG
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Arguments = FormatArguments(filePath, settings.OptLevel),
+                    Arguments = FormatArguments(filePath, optimizationLevel),
                     RedirectStandardError = true,
                 }
             })
             {
                 p.Start();
-                p.PriorityClass = settings.ProcessPriority;
+                p.PriorityClass = priority;
                 p.ErrorDataReceived += (sender, e) =>
                 {
                     if (standardErrorCallback != null)

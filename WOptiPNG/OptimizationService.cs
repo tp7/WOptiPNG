@@ -5,7 +5,6 @@ using System.IO;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace WOptiPNG
 {
@@ -90,7 +89,7 @@ namespace WOptiPNG
         {
             _filesToProcess.Enqueue(e.FullPath);
 
-            if (_runningTasksCount >= 2)
+            if (_runningTasksCount >= _settings.ServiceThreads)
             {
                 return;
             }
@@ -129,7 +128,8 @@ namespace WOptiPNG
             {
                 File.Copy(inputPath, tempFile, true);
 
-                if (OptiPngWrapper.Optimize(tempFile, settings, null) != 0)
+                var result = OptiPngWrapper.Optimize(tempFile, settings.ServiceOptimizationLevel, settings.ServiceProcessPriority, null);
+                if (result != 0)
                 {
                     return;
                 }

@@ -128,7 +128,7 @@ namespace WOptiPNG
 
                 int triesCount = 0;
                 int lastLineLength = 0;
-                var status = OptiPngWrapper.Optimize(tempFile, _settings, (str) =>
+                var status = OptiPngWrapper.Optimize(tempFile, _settings.OptLevel, _settings.ProcessPriority, (str) =>
                 {
                     if (str == null)
                     {
