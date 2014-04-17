@@ -184,7 +184,7 @@
 
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Header="Settings" Position="Right" Width="200" Name="SettingsView">
+            <controls:Flyout Header="Settings" Position="Right" Width="360" Name="SettingsView">
                 <wOptiPng:SettingsView HorizontalAlignment="Left">
 
                 </wOptiPng:SettingsView>

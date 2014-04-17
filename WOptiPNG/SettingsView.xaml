@@ -8,14 +8,19 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="WOptiPNG.SettingsView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="180">
+             d:DesignHeight="300" d:DesignWidth="380">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <StackPanel Width="150" Margin="12" Grid.Row="0"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Width="150" Margin="12" Grid.Row="0" Grid.Column="0"
                     d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+            <Label Content="Application settings" HorizontalAlignment="Left" FontSize="16"/>
             <Label Content="Optimization Level"/>
             <ComboBox SelectedItem="{Binding OptLevel}">
                 <system:Int32>1</system:Int32>
@@ -34,7 +39,28 @@
             <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
         </StackPanel>
 
-        <TextBlock Grid.Row="1" Margin="12 0 12 12" VerticalAlignment="Center">           
+        <StackPanel Width="150" Margin="12" Grid.Row="0" Grid.Column="1"
+                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+            
+            <Label Content="Service settings" HorizontalAlignment="Left" FontSize="16"/>
+            <Label Content="Optimization Level"/>
+            <ComboBox SelectedItem="{Binding ServiceOptLevel}">
+                <system:Int32>1</system:Int32>
+                <system:Int32>2</system:Int32>
+                <system:Int32>3</system:Int32>
+                <system:Int32>4</system:Int32>
+                <system:Int32>5</system:Int32>
+                <system:Int32>6</system:Int32>
+                <system:Int32>7</system:Int32>
+                <system:Int32>8</system:Int32>
+            </ComboBox>
+            <Label Content="Threads" />
+            <ComboBox SelectedItem="{Binding ServiceThreads}" Name="ServiceThreadsBox" />
+            <Label Content="Process priority" />
+            <ComboBox SelectedItem="{Binding ServiceProcessPriority}" Name="ServiceAllowedPriorities" />
+        </StackPanel>
+
+        <TextBlock Grid.Column="0" Grid.Row="1" Margin="12 0 12 12" VerticalAlignment="Center">           
             <Hyperlink NavigateUri="http://optipng.sourceforge.net/" RequestNavigate="HandleNavigationRequest">
                 OptiPNG homepage
             </Hyperlink>

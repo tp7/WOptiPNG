@@ -37,11 +37,13 @@ namespace WOptiPNG
         public ICollection<WatchedDirectory> WatchedFolders { get; set; }
         public int ServiceThreads { get; set; }
         public ProcessPriorityClass ServiceProcessPriority { get; set; }
-        public int ServiceOptimizationLevel { get; set; }
+        public int ServiceOptLevel { get; set; }
 
         public bool SettingsValid()
         {
-            return Threads > 0 && OptLevel > 0 && OptLevel <= 8;
+            return Threads > 0 && ServiceThreads > 0 && 
+                OptLevel > 0 && OptLevel <= 8 &&
+                ServiceOptLevel > 0 && ServiceOptLevel <= 8;
         }
 
         public void ResetBrokenSettings()
@@ -53,6 +55,14 @@ namespace WOptiPNG
             if (OptLevel <= 0 || OptLevel > 8)
             {
                 OptLevel = DefaultOptLevel;
+            }
+            if (ServiceThreads <= 0)
+            {
+                ServiceThreads = Math.Max(1, DefaultThreads/4);
+            }
+            if (ServiceOptLevel <= 0 || ServiceOptLevel > 8)
+            {
+                ServiceOptLevel = DefaultOptLevel;
             }
         }
 
@@ -70,6 +80,14 @@ namespace WOptiPNG
             if (OptLevel <= 0 || OptLevel > 8)
             {
                 names.Add("optimization level");
+            }
+            if (ServiceThreads <= 0)
+            {
+                names.Add("service threads");
+            }
+            if (ServiceOptLevel <= 0 || ServiceOptLevel > 8)
+            {
+                names.Add("service optimization level");
             }
             return names;
         }

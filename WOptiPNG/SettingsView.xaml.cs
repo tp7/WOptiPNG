@@ -1,26 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WOptiPNG
 {
-    /// <summary>
-    /// Interaction logic for SettingsView.xaml
-    /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsView
     {
         public SettingsView()
         {
@@ -28,14 +13,18 @@ namespace WOptiPNG
             for (int i = 1; i <= Environment.ProcessorCount*2; i++)
             {
                 ThreadsBox.Items.Add(i);
+                ServiceThreadsBox.Items.Add(i);
             }
 
             //don't allow real time because that's just wrong
-            AllowedPriorities.Items.Add(ProcessPriorityClass.Idle);
-            AllowedPriorities.Items.Add(ProcessPriorityClass.BelowNormal);
-            AllowedPriorities.Items.Add(ProcessPriorityClass.Normal);
-            AllowedPriorities.Items.Add(ProcessPriorityClass.AboveNormal);
-            AllowedPriorities.Items.Add(ProcessPriorityClass.High);
+            foreach (var c in new[] {ServiceAllowedPriorities, AllowedPriorities})
+            {
+                c.Items.Add(ProcessPriorityClass.Idle);
+                c.Items.Add(ProcessPriorityClass.BelowNormal);
+                c.Items.Add(ProcessPriorityClass.Normal);
+                c.Items.Add(ProcessPriorityClass.AboveNormal);
+                c.Items.Add(ProcessPriorityClass.High);
+            }
         }
 
         private void HandleNavigationRequest(object sender, RequestNavigateEventArgs e)

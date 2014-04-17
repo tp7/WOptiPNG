@@ -17,18 +17,28 @@ namespace WOptiPNG
 
         public OptimizationService()
         {
-            _settings = Settings.ReadFromFile();
-
+            LoadSettings();
             var path = Settings.SettingsPath;
             _settingsWatcher = new FileSystemWatcher(Path.GetDirectoryName(path), Path.GetFileName(path));
             _settingsWatcher.Changed += ReloadSettings;
             _settingsWatcher.EnableRaisingEvents = true;
         }
 
+        private void LoadSettings()
+        {
+            _settings = Settings.ReadFromFile();
+            if (!_settings.SettingsValid())
+            {
+                var names = string.Join(", ", _settings.GetBrokenSettingsNames());
+                Trace.TraceWarning(string.Format("Some settings are broken ({0}), using defaults", names));
+                _settings.ResetBrokenSettings();
+            }
+        }
+
         void ReloadSettings(object sender, FileSystemEventArgs e)
         {
             Trace.WriteLine("Reloading settings");
-            _settings = Settings.ReadFromFile();
+            LoadSettings();
         }
 
         protected override void OnStart(string[] args)
@@ -128,7 +138,7 @@ namespace WOptiPNG
             {
                 File.Copy(inputPath, tempFile, true);
 
-                var result = OptiPngWrapper.Optimize(tempFile, settings.ServiceOptimizationLevel, settings.ServiceProcessPriority, null);
+                var result = OptiPngWrapper.Optimize(tempFile, settings.ServiceOptLevel, settings.ServiceProcessPriority, null);
                 if (result != 0)
                 {
                     return;

@@ -114,6 +114,48 @@ namespace WOptiPNG
             }
         }
 
+        public int ServiceThreads
+        {
+            get { return _settings.ServiceThreads; }
+            set
+            {
+                if (value == _settings.ServiceThreads)
+                {
+                    return;
+                }
+                _settings.ServiceThreads = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ProcessPriorityClass ServiceProcessPriority
+        {
+            get { return _settings.ServiceProcessPriority; }
+            set
+            {
+                if (value == _settings.ServiceProcessPriority)
+                {
+                    return;
+                }
+                _settings.ServiceProcessPriority = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ServiceOptLevel
+        {
+            get { return _settings.ServiceOptLevel; }
+            set
+            {
+                if (value == _settings.ServiceOptLevel)
+                {
+                    return;
+                }
+                _settings.ServiceOptLevel = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
 
