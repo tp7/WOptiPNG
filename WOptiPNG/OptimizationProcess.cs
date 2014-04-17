@@ -208,7 +208,6 @@ namespace WOptiPNG
             finally
             {
                 File.Delete(tempFile);
-                
             }
         }
     }

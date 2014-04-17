@@ -6,9 +6,15 @@ using System.Runtime.Serialization.Json;
 
 namespace WOptiPNG
 {
+    public class WatchedDirectory
+    {
+        public string Path { get; set; }
+        public bool WatchSubfolders { get; set; }
+    }
+
     public class Settings
     {
-        public Settings()
+        private Settings()
         {
             OverwriteSource = true;
             Threads = DefaultThreads;
@@ -23,8 +29,12 @@ namespace WOptiPNG
         public bool IncludeSubfolders { get; set; }
         public ProcessPriorityClass ProcessPriority { get; set; }
 
-        public static int DefaultThreads { get { return Environment.ProcessorCount; } }
-        public static int DefaultOptLevel { get { return 2; } }
+        private static int DefaultThreads { get { return Environment.ProcessorCount; } }
+        private static int DefaultOptLevel { get { return 2; } }
+
+        //windows service settings
+        public ICollection<WatchedDirectory> WatchedFolders { get; set; }
+        public int BackgroundThreads { get; set; }
 
         public bool SettingsValid()
         {
@@ -62,9 +72,9 @@ namespace WOptiPNG
         }
 
 
-        public void WriteToFile(string path)
+        public void WriteToFile()
         {
-            var folder = Path.GetDirectoryName(path);
+            var folder = Path.GetDirectoryName(SettingsPath);
             if (folder == null)
             {
                 throw new IOException("Incorrect folder name");
@@ -75,26 +85,41 @@ namespace WOptiPNG
             }
             var serializer = new DataContractJsonSerializer(typeof(Settings));
 
-            using (var stream = File.OpenWrite(path))
+            using (var stream = File.OpenWrite(SettingsPath))
             {
                 serializer.WriteObject(stream, this);
                 stream.SetLength(stream.Position);
             }
         }
 
-        public static Settings ReadFromFile(string path)
+        private static string _settingsPath;
+        private static string SettingsPath
+        {
+            get { return _settingsPath ?? (_settingsPath = Path.Combine(ApplicationDataPath, "Settings.json")); }
+        }
+
+        public static string ApplicationDataPath
+        {
+            get
+            {
+                var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                return Path.Combine(appdata, "WOptiPng");
+            }
+        }
+
+        public static Settings ReadFromFile()
         {
             var serializer = new DataContractJsonSerializer(typeof (Settings));
 
-            if (File.Exists(path))
+            if (File.Exists(SettingsPath))
             {
-                using (var stream = File.OpenRead(path))
+                using (var stream = File.OpenRead(SettingsPath))
                 {
                     return (Settings)serializer.ReadObject(stream);
                 }
             }
             var settings = new Settings();
-            settings.WriteToFile(path);
+            settings.WriteToFile();
             return settings;
         }
     }

@@ -12,26 +12,12 @@ namespace WOptiPNG
     public partial class MainWindow
     {
         private readonly Settings _settings;
-        private string _settingsPath;
         private readonly MainViewModel _viewModel;
-
-        private string SettingsPath
-        {
-            get
-            {
-                if (_settingsPath == null)
-                {
-                    var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    _settingsPath = Path.Combine(appdata, "WOptiPng", "Settings.json");
-                }
-                return _settingsPath;
-            }
-        }
 
         public MainWindow()
         {
             InitializeComponent();
-            _settings = Settings.ReadFromFile(SettingsPath);
+            _settings = Settings.ReadFromFile();
             _viewModel = new MainViewModel(_settings);
             DataContext = _viewModel;
 
@@ -56,7 +42,7 @@ namespace WOptiPNG
         
         protected override void OnClosed(EventArgs e)
         {
-            _settings.WriteToFile(SettingsPath);
+            _settings.WriteToFile();
             base.OnClosed(e);
         }
 

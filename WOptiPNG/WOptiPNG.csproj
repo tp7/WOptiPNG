@@ -39,6 +39,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WOptiPNG.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MahApps.Metro, Version=0.13.1.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -82,11 +85,13 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="OptimizationProcess.cs" />
     <Compile Include="OptiPngWrapper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OptimizationService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
