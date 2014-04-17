@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace WOptiPNG
 {
@@ -59,5 +61,41 @@ namespace WOptiPNG
             return names;
         }
 
+
+        public void WriteToFile(string path)
+        {
+            var folder = Path.GetDirectoryName(path);
+            if (folder == null)
+            {
+                throw new IOException("Incorrect folder name");
+            }
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var serializer = new DataContractJsonSerializer(typeof(Settings));
+
+            using (var stream = File.OpenWrite(path))
+            {
+                serializer.WriteObject(stream, this);
+                stream.SetLength(stream.Position);
+            }
+        }
+
+        public static Settings ReadFromFile(string path)
+        {
+            var serializer = new DataContractJsonSerializer(typeof (Settings));
+
+            if (File.Exists(path))
+            {
+                using (var stream = File.OpenRead(path))
+                {
+                    return (Settings)serializer.ReadObject(stream);
+                }
+            }
+            var settings = new Settings();
+            settings.WriteToFile(path);
+            return settings;
+        }
     }
 }

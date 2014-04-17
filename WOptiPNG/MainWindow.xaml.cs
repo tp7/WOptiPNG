@@ -2,12 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
-using Path = System.IO.Path;
 
 namespace WOptiPNG
 {
@@ -33,21 +31,7 @@ namespace WOptiPNG
         public MainWindow()
         {
             InitializeComponent();
-
-            var serializer = new DataContractJsonSerializer(typeof (Settings));
-            if (File.Exists(SettingsPath))
-            {
-                using (var stream = File.OpenRead(SettingsPath))
-                {
-                    _settings = (Settings)serializer.ReadObject(stream);
-                }
-            }
-            else
-            {
-                _settings = new Settings();
-                WriteSettings(SettingsPath, _settings);
-            }
-
+            _settings = Settings.ReadFromFile(SettingsPath);
             _viewModel = new MainViewModel(_settings);
             DataContext = _viewModel;
 
@@ -70,29 +54,9 @@ namespace WOptiPNG
             };
         }
         
-        private static void WriteSettings(string path, Settings value)
-        {
-            var folder = Path.GetDirectoryName(path);
-            if (folder == null)
-            {
-                throw new IOException("Incorrect folder name");
-            }
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-            var serializer = new DataContractJsonSerializer(typeof (Settings));
-
-            using (var stream = File.OpenWrite(path))
-            {
-                serializer.WriteObject(stream, value);
-                stream.SetLength(stream.Position);
-            }
-        }
-
         protected override void OnClosed(EventArgs e)
         {
-            WriteSettings(SettingsPath, _settings);
+            _settings.WriteToFile(SettingsPath);
             base.OnClosed(e);
         }
 
