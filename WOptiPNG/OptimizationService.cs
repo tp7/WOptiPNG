@@ -13,10 +13,22 @@ namespace WOptiPNG
     {
         private readonly ConcurrentDictionary<FileSystemWatcher, WatchedDirectory> _watchers = new ConcurrentDictionary<FileSystemWatcher, WatchedDirectory>();
         private readonly ConcurrentQueue<string> _filesToProcess = new ConcurrentQueue<string>();
-        private readonly Settings _settings;
+        private Settings _settings;
+        private readonly FileSystemWatcher _settingsWatcher;
 
         public OptimizationService()
         {
+            _settings = Settings.ReadFromFile();
+
+            var path = Settings.SettingsPath;
+            _settingsWatcher = new FileSystemWatcher(Path.GetDirectoryName(path), Path.GetFileName(path));
+            _settingsWatcher.Changed += ReloadSettings;
+            _settingsWatcher.EnableRaisingEvents = true;
+        }
+
+        void ReloadSettings(object sender, FileSystemEventArgs e)
+        {
+            Trace.WriteLine("Reloading settings");
             _settings = Settings.ReadFromFile();
         }
 
@@ -40,7 +52,7 @@ namespace WOptiPNG
             {
                 watcher.Dispose();
             }
-
+            _settingsWatcher.Dispose();
             base.OnStop();
         }
 

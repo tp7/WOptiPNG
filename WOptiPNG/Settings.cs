@@ -92,7 +92,7 @@ namespace WOptiPNG
         }
 
         private static string _settingsPath;
-        private static string SettingsPath
+        public static string SettingsPath
         {
             get { return _settingsPath ?? (_settingsPath = Path.Combine(ApplicationDataPath, "settings.json")); }
         }
