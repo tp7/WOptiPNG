@@ -23,6 +23,9 @@ namespace WOptiPNG
             Threads = DefaultThreads;
             OptLevel = DefaultOptLevel;
             ProcessPriority = ProcessPriorityClass.Normal;
+            ServiceThreads = DefaultServiceThreads;
+            ServiceOptLevel = DefaultOptLevel;
+            ServiceProcessPriority = ProcessPriorityClass.Normal;
         }
 
         public bool OverwriteSource { get; set; }
@@ -34,6 +37,7 @@ namespace WOptiPNG
 
         private static int DefaultThreads { get { return Environment.ProcessorCount; } }
         private static int DefaultOptLevel { get { return 2; } }
+        private static int DefaultServiceThreads { get { return Math.Max(1, DefaultThreads/4); } }
 
         //windows service settings
         public ObservableCollection<WatchedDirectory> WatchedFolders { get; set; }
@@ -60,7 +64,7 @@ namespace WOptiPNG
             }
             if (ServiceThreads <= 0)
             {
-                ServiceThreads = Math.Max(1, DefaultThreads/4);
+                ServiceThreads = DefaultServiceThreads;
             }
             if (ServiceOptLevel <= 0 || ServiceOptLevel > 8)
             {
