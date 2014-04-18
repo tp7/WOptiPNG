@@ -34,15 +34,16 @@ namespace WOptiPNG
             if (!_settings.SettingsValid())
             {
                 var names = string.Join(", ", _settings.GetBrokenSettingsNames());
-                Trace.TraceWarning(string.Format("Some settings are broken ({0}), using defaults", names));
+                Program.WriteWindowsLog(string.Format("Some settings are broken ({0}), using defaults", names),
+                    EventLogEntryType.Warning);
                 _settings.ResetBrokenSettings();
             }
         }
 
         void ReloadSettings()
         {
-            Trace.WriteLine("Reloading settings");
-            
+            Program.WriteWindowsLog("Reloading settings",EventLogEntryType.Information);
+
             LoadSettings();
             
             foreach (var watcher in _watchers.Keys)
@@ -63,7 +64,8 @@ namespace WOptiPNG
             {
                 if (!Directory.Exists(folder.Path))
                 {
-                    Trace.TraceWarning("Folder {0} doesn't exist", folder.Path);
+                    Program.WriteWindowsLog(string.Format("Folder {0} not found", folder.Path),
+                        EventLogEntryType.Warning);
                     continue;
                 }
 
@@ -81,7 +83,8 @@ namespace WOptiPNG
                     });
                 if (alreadyWatched)
                 {
-                    Trace.TraceWarning("Watching folder {0} from some other broader location", folder.Path);
+                    var message = string.Format("Watching folder {0} from some other broader location", folder.Path);
+                    Program.WriteWindowsLog(message, EventLogEntryType.Warning);
                     continue;
                 }
                 _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
@@ -170,7 +173,8 @@ namespace WOptiPNG
                 Interlocked.Decrement(ref _runningTasksCount);
                 if (f.Exception != null)
                 {
-                    Trace.TraceError("Error while processing files: {0}", f.Exception.InnerException.Message);
+                    var message = string.Format("Error while processing files: {0}", f.Exception.InnerException.Message);
+                    Program.WriteWindowsLog(message, EventLogEntryType.Error);
                 }
             });
         }
@@ -214,5 +218,7 @@ namespace WOptiPNG
                 File.Delete(tempFile);
             }
         }
+
+      
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.ServiceProcess;
 
 namespace WOptiPNG
@@ -29,6 +31,11 @@ namespace WOptiPNG
         {
             try
             {
+                if (IsAdministrator() && !EventLog.SourceExists(ServiceName))
+                {
+                    //yay, got admin rights for the first time, create the log
+                    EventLog.CreateEventSource(ServiceName, "Application");
+                }
                 if (args != null && args.Length > 0)
                 {
                     if (args.Any(f => "--install".Equals(f, StringComparison.OrdinalIgnoreCase)))
@@ -43,13 +50,7 @@ namespace WOptiPNG
                     }
                     if (args.Any(f => "--background".Equals(f, StringComparison.OrdinalIgnoreCase)))
                     {
-                        var logPath = Path.Combine(Settings.ApplicationDataPath, "service.log");
-                        var listener = new TextWriterTraceListener(logPath) {TraceOutputOptions = TraceOptions.DateTime};
-                        Trace.AutoFlush = true;
-                        Trace.Listeners.Add(listener);
-                        // Change the following line to match.
                         ServiceBase.Run(new ServiceBase[] {new OptimizationService()});
-                        //new OptimizationService().Run();
                         return;
                     }
                 }
@@ -58,8 +59,28 @@ namespace WOptiPNG
             }
             catch (Exception e)
             {
-                Trace.TraceError(e.Message);
+                WriteWindowsLog(e.Message, EventLogEntryType.Error);
             }
+        }
+
+        public static void WriteWindowsLog(string message, EventLogEntryType type)
+        {
+            Trace.WriteLine(message);
+            try
+            {
+                EventLog.WriteEntry(ServiceName, message, type);
+            }
+            catch(Win32Exception)
+            {
+                //access denied, we've never run as administator
+            }
+        }
+
+        public static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

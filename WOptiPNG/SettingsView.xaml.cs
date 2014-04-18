@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Principal;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace WOptiPNG
@@ -28,7 +25,7 @@ namespace WOptiPNG
                 c.Items.Add(ProcessPriorityClass.High);
             }
 
-            if (!IsAdministrator())
+            if (!Program.IsAdministrator())
             {
                 InstallServiceButton.ToolTip = "You have to run the app as administrator";
                 InstallServiceButton.IsEnabled = false;
@@ -41,11 +38,6 @@ namespace WOptiPNG
             e.Handled = true;
         }
 
-        private static bool IsAdministrator()
-        {
-            var identity = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+        
     }
 }
