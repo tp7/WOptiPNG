@@ -20,7 +20,15 @@ Second, the GUI will launch multiple OptiPNG processes in parallel to maximize y
  4. UTF-16 paths are supported (unless you have utf-16 characters in your %TEMP% path).
  5. Double-click or Enter key opens selected image.
  6. You can see [OptiPNG log](http://i.imgur.com/A3QNZHL.png) on mouse hover to know what exactly went wrong or right.
+ 7. Ability to run as a Windows service.
 
+#### Windows service ####
+This app can install itself as a Windows service. This service sits in background and monitors configured directories for any PNG files being added. When a file is added, it's automatically processed with OptiPNG.
+
+To (un)install this service you need to run the app as administrator and click the button in settings menu. The service will reload settings when they're changed in the main app so you don't need to manually re-start it after adding some folders or changing other parameters.
+
+This feature is highly experimental.
+ 
 #### Other things ####
 
 I just wanted to play with WPF and [MahApps.Metro](http://mahapps.com) a bit and happened to need an OptiPNG-only GUI. You probably shouldn't use this code for learning.
