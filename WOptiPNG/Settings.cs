@@ -26,6 +26,7 @@ namespace WOptiPNG
             ServiceThreads = DefaultServiceThreads;
             ServiceOptLevel = DefaultOptLevel;
             ServiceProcessPriority = ProcessPriorityClass.Normal;
+            WatchedFolders = new ObservableCollection<WatchedDirectory>();
         }
 
         public bool OverwriteSource { get; set; }
