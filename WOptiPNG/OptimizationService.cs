@@ -16,13 +16,15 @@ namespace WOptiPNG
         private readonly ConcurrentQueue<string> _filesToProcess = new ConcurrentQueue<string>();
         private Settings _settings;
         private readonly FileSystemWatcher _settingsWatcher;
+        private readonly ThrottledMethodCall _settingsReloader;
         
         public OptimizationService()
         {
             LoadSettings();
             var path = Settings.SettingsPath;
             _settingsWatcher = new FileSystemWatcher(Path.GetDirectoryName(path), Path.GetFileName(path));
-            _settingsWatcher.Changed += ReloadSettings;
+            _settingsReloader = new ThrottledMethodCall(ReloadSettings, 500);
+            _settingsWatcher.Changed += (sender, e) => _settingsReloader.Call();
             _settingsWatcher.EnableRaisingEvents = true;
         }
 
@@ -37,10 +39,12 @@ namespace WOptiPNG
             }
         }
 
-        void ReloadSettings(object sender, FileSystemEventArgs e)
+        void ReloadSettings()
         {
             Trace.WriteLine("Reloading settings");
+            
             LoadSettings();
+            
             foreach (var watcher in _watchers.Keys)
             {
                 watcher.Dispose();
