@@ -141,6 +141,10 @@ namespace WOptiPNG
 
         private void FilterOutNonexistentFolders()
         {
+            if (WatchedFolders == null)
+            {
+                return;
+            }
             foreach (var wf in WatchedFolders.ToList())
             {
                 if (!Directory.Exists(wf.Path))
