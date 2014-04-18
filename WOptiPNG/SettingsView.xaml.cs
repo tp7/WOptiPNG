@@ -41,18 +41,6 @@ namespace WOptiPNG
             e.Handled = true;
         }
 
-        private void InstallServiceButtonClick(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (Program.ServiceInstalled)
-            {
-                Program.UninstallService();
-            }
-            else
-            {
-                Program.InstallAndStart();
-            }
-        }
-
         private static bool IsAdministrator()
         {
             var identity = WindowsIdentity.GetCurrent();

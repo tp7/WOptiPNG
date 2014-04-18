@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,18 +49,40 @@ namespace WOptiPNG
             {
                 return;
             }
+
             foreach (var folder in _settings.WatchedFolders)
             {
-                if (Directory.Exists(folder.Path))
-                {
-                    _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
-                }
-                else
+                if (!Directory.Exists(folder.Path))
                 {
                     Trace.TraceWarning("Folder {0} doesn't exist", folder.Path);
+                    continue;
                 }
+
+                //we assume that there won't be too many folders so this won't be too slow
+                var canonicalPath = ToCanonicalPath(folder.Path);
+                var alreadyWatched = _settings.WatchedFolders
+                    .Any(other =>
+                    {
+                        if (other == folder)
+                        {
+                            return false;
+                        }
+                        var otherPath = ToCanonicalPath(other.Path);
+                        return canonicalPath == otherPath || (canonicalPath.StartsWith(otherPath) && other.WatchSubfolders);
+                    });
+                if (alreadyWatched)
+                {
+                    Trace.TraceWarning("Watching folder {0} from some other broader location", folder.Path);
+                    continue;
+                }
+                _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
             }
             base.OnStart(args);
+        }
+
+        private static string ToCanonicalPath(string path)
+        {
+            return Path.GetFullPath(path).Replace('\\', '/').ToLowerInvariant();
         }
 
         protected override void OnStop()
