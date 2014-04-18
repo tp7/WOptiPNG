@@ -16,7 +16,7 @@ namespace WOptiPNG
         private readonly ConcurrentQueue<string> _filesToProcess = new ConcurrentQueue<string>();
         private Settings _settings;
         private readonly FileSystemWatcher _settingsWatcher;
-
+        
         public OptimizationService()
         {
             LoadSettings();
@@ -41,15 +41,20 @@ namespace WOptiPNG
         {
             Trace.WriteLine("Reloading settings");
             LoadSettings();
+            foreach (var watcher in _watchers.Keys)
+            {
+                watcher.Dispose();
+            }
+            _watchers.Clear();
+            CreateWatchers();
         }
 
-        protected override void OnStart(string[] args)
+        private void CreateWatchers()
         {
             if (_settings.WatchedFolders == null || _settings.WatchedFolders.Count == 0)
             {
                 return;
             }
-
             foreach (var folder in _settings.WatchedFolders)
             {
                 if (!Directory.Exists(folder.Path))
@@ -77,6 +82,11 @@ namespace WOptiPNG
                 }
                 _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
             }
+        }
+
+        protected override void OnStart(string[] args)
+        {
+            CreateWatchers();
             base.OnStart(args);
         }
 
