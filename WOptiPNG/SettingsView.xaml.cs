@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace WOptiPNG
@@ -25,12 +27,37 @@ namespace WOptiPNG
                 c.Items.Add(ProcessPriorityClass.AboveNormal);
                 c.Items.Add(ProcessPriorityClass.High);
             }
+
+            if (!IsAdministrator())
+            {
+                InstallServiceButton.ToolTip = "You have to run the app as administrator";
+                InstallServiceButton.IsEnabled = false;
+            }
         }
 
         private void HandleNavigationRequest(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
+        }
+
+        private void InstallServiceButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Program.ServiceInstalled)
+            {
+                Program.UninstallService();
+            }
+            else
+            {
+                Program.InstallAndStart();
+            }
+        }
+
+        private static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

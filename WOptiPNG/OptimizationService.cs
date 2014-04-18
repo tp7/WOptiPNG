@@ -49,7 +49,14 @@ namespace WOptiPNG
             }
             foreach (var folder in _settings.WatchedFolders)
             {
-                _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
+                if (Directory.Exists(folder.Path))
+                {
+                    _watchers[CreatePngWatcher(folder.Path, folder.WatchSubfolders)] = folder;
+                }
+                else
+                {
+                    Trace.TraceWarning("Folder {0} doesn't exist", folder.Path);
+                }
             }
             base.OnStart(args);
         }

@@ -108,7 +108,7 @@ namespace WOptiPNG
 
         [DllImport("advapi32.dll", EntryPoint = "OpenSCManagerW", ExactSpelling = true, CharSet = CharSet.Unicode,
             SetLastError = true)]
-        private static extern IntPtr OpenSCManager(string machineName, string databaseName,
+        private static extern IntPtr OpenScManager(string machineName, string databaseName,
             ScmAccessRights dwDesiredAccess);
 
         #endregion
@@ -171,7 +171,7 @@ namespace WOptiPNG
 
         public static void Uninstall(string serviceName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
+            IntPtr scm = OpenScManager(ScmAccessRights.AllAccess);
 
             try
             {
@@ -202,7 +202,7 @@ namespace WOptiPNG
 
         public static bool ServiceIsInstalled(string serviceName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
+            IntPtr scm = OpenScManager(ScmAccessRights.Connect);
 
             try
             {
@@ -222,7 +222,7 @@ namespace WOptiPNG
 
         public static void InstallAndStart(string serviceName, string displayName, string fileName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
+            IntPtr scm = OpenScManager(ScmAccessRights.AllAccess);
 
             try
             {
@@ -253,7 +253,7 @@ namespace WOptiPNG
 
         public static void StartService(string serviceName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
+            IntPtr scm = OpenScManager(ScmAccessRights.Connect);
 
             try
             {
@@ -279,7 +279,7 @@ namespace WOptiPNG
 
         public static void StopService(string serviceName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
+            IntPtr scm = OpenScManager(ScmAccessRights.Connect);
 
             try
             {
@@ -323,7 +323,7 @@ namespace WOptiPNG
 
         public static ServiceState GetServiceStatus(string serviceName)
         {
-            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
+            IntPtr scm = OpenScManager(ScmAccessRights.Connect);
 
             try
             {
@@ -401,9 +401,9 @@ namespace WOptiPNG
             return (status.dwCurrentState == desiredStatus);
         }
 
-        private static IntPtr OpenSCManager(ScmAccessRights rights)
+        private static IntPtr OpenScManager(ScmAccessRights rights)
         {
-            IntPtr scm = OpenSCManager(null, null, rights);
+            IntPtr scm = OpenScManager(null, null, rights);
             var lastError = Marshal.GetLastWin32Error();
             var exception = new Win32Exception(lastError);
 

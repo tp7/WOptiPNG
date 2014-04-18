@@ -8,59 +8,84 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="WOptiPNG.SettingsView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="380">
-    <Grid>
+             d:DesignHeight="500" d:DesignWidth="250">
+    
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <StackPanel Width="150" Margin="12" Grid.Row="0" Grid.Column="0"
-                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
-            <Label Content="Application settings" HorizontalAlignment="Left" FontSize="16"/>
-            <Label Content="Optimization Level"/>
-            <ComboBox SelectedItem="{Binding OptLevel}">
-                <system:Int32>1</system:Int32>
-                <system:Int32>2</system:Int32>
-                <system:Int32>3</system:Int32>
-                <system:Int32>4</system:Int32>
-                <system:Int32>5</system:Int32>
-                <system:Int32>6</system:Int32>
-                <system:Int32>7</system:Int32>
-                <system:Int32>8</system:Int32>
-            </ComboBox>
-            <Label Content="Threads" />
-            <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
-            <Label Content="Process priority" />
-            <ComboBox SelectedItem="{Binding ProcessPriority}" Name="AllowedPriorities" />
-            <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
-        </StackPanel>
-
-        <StackPanel Width="150" Margin="12" Grid.Row="0" Grid.Column="1"
-                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
             
-            <Label Content="Service settings" HorizontalAlignment="Left" FontSize="16"/>
-            <Label Content="Optimization Level"/>
-            <ComboBox SelectedItem="{Binding ServiceOptLevel}">
-                <system:Int32>1</system:Int32>
-                <system:Int32>2</system:Int32>
-                <system:Int32>3</system:Int32>
-                <system:Int32>4</system:Int32>
-                <system:Int32>5</system:Int32>
-                <system:Int32>6</system:Int32>
-                <system:Int32>7</system:Int32>
-                <system:Int32>8</system:Int32>
-            </ComboBox>
-            <Label Content="Threads" />
-            <ComboBox SelectedItem="{Binding ServiceThreads}" Name="ServiceThreadsBox" />
-            <Label Content="Process priority" />
-            <ComboBox SelectedItem="{Binding ServiceProcessPriority}" Name="ServiceAllowedPriorities" />
-        </StackPanel>
+        <controls:MetroAnimatedTabControl Grid.Row="0" >
+            <TabItem Header="App">
+                <StackPanel HorizontalAlignment="Left" Width="226" Margin="12"
+                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+                    <Label Content="Optimization Level"/>
+                    <ComboBox SelectedItem="{Binding OptLevel}">
+                        <system:Int32>1</system:Int32>
+                        <system:Int32>2</system:Int32>
+                        <system:Int32>3</system:Int32>
+                        <system:Int32>4</system:Int32>
+                        <system:Int32>5</system:Int32>
+                        <system:Int32>6</system:Int32>
+                        <system:Int32>7</system:Int32>
+                        <system:Int32>8</system:Int32>
+                    </ComboBox>
+                    <Label Content="Threads" />
+                    <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
+                    <Label Content="Process priority" />
+                    <ComboBox SelectedItem="{Binding ProcessPriority}" Name="AllowedPriorities" />
+                    <CheckBox Padding="5 10" ToolTip="Include subfolders on drag-n-drop" IsChecked="{Binding IncludeSubfolders}">Include subfolders</CheckBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Service">
+                <StackPanel HorizontalAlignment="Left" Width="226" Margin="12"
+                    d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
+                    <Label Content="Optimization Level"/>
+                    <ComboBox SelectedItem="{Binding ServiceOptLevel}">
+                        <system:Int32>1</system:Int32>
+                        <system:Int32>2</system:Int32>
+                        <system:Int32>3</system:Int32>
+                        <system:Int32>4</system:Int32>
+                        <system:Int32>5</system:Int32>
+                        <system:Int32>6</system:Int32>
+                        <system:Int32>7</system:Int32>
+                        <system:Int32>8</system:Int32>
+                    </ComboBox>
+                    <Label Content="Threads" />
+                    <ComboBox SelectedItem="{Binding ServiceThreads}" Name="ServiceThreadsBox" />
+                    <Label Content="Process priority" />
+                    <ComboBox SelectedItem="{Binding ServiceProcessPriority}" Name="ServiceAllowedPriorities" />
+                    <Label Content="Watched folders" />
+                    <DataGrid Height="124" HeadersVisibility="None" ItemsSource="{Binding WatchedFolders}"
+                              CanUserAddRows="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn
+                                        Binding="{Binding WatchSubfolders, UpdateSourceTrigger=PropertyChanged}" >
+                                <DataGridCheckBoxColumn.ElementStyle>
+                                    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MetroDataGridCheckBox}">
+                                        <Setter Property="ToolTip" Value="Watch subfolders"/>
+                                        <Setter Property="Margin" Value="6 6 6 6" />
+                                    </Style>
+                                </DataGridCheckBoxColumn.ElementStyle>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn Header="Path" Binding="{Binding Path}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Add folder" Margin="0 12 6 12" Width="107" 
+                                Command="{Binding AddWatchedFolderCommand}"/>
+                        <Button Content="{Binding InstallServiceButtonText}"
+                                Name="InstallServiceButton"
+                                ToolTipService.ShowOnDisabled="True"
+                                Command="{Binding InstallServiceCommand}"
+                                Margin="6 12 0 12" Width="107" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </controls:MetroAnimatedTabControl>
 
-        <TextBlock Grid.Column="0" Grid.Row="1" Margin="12 0 12 12" VerticalAlignment="Center">           
+        <TextBlock Grid.Row="1" Margin="12 0 12 12" VerticalAlignment="Center">           
             <Hyperlink NavigateUri="http://optipng.sourceforge.net/" RequestNavigate="HandleNavigationRequest">
                 OptiPNG homepage
             </Hyperlink>

@@ -39,7 +39,7 @@ namespace WOptiPNG
                 _settings.ResetBrokenSettings();
             };
         }
-        
+
         protected override void OnClosed(EventArgs e)
         {
             _settings.WriteToFile();

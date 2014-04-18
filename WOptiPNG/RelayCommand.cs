@@ -42,14 +42,18 @@ namespace WOptiPNG
         public void RaiseCanExecuteChanged()
         {
             if (_canExecute != null)
+            {
                 OnCanExecuteChanged();
+            }
         }
 
         protected virtual void OnCanExecuteChanged()
         {
-            EventHandler eCanExecuteChanged = _internalCanExecuteChanged;
+            var eCanExecuteChanged = _internalCanExecuteChanged;
             if (eCanExecuteChanged != null)
+            {
                 eCanExecuteChanged(this, EventArgs.Empty);
+            }
         }
 
         public event EventHandler CanExecuteChanged

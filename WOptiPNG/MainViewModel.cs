@@ -156,6 +156,11 @@ namespace WOptiPNG
             }
         }
 
+        public ObservableCollection<WatchedDirectory> WatchedFolders
+        {
+            get { return _settings.WatchedFolders; }
+        }
+
         #endregion
 
 
@@ -221,10 +226,19 @@ namespace WOptiPNG
             }
         }
 
+        public string InstallServiceButtonText
+        {
+            get
+            {
+                return Program.ServiceInstalled ? "Uninstall service" : "Install service";
+            }
+        }
+
+
         private readonly ObservableCollection<OptimizationProcess> _files;
         public ReadOnlyObservableCollection<OptimizationProcess> Files { get; private set; }
 
-        private long _saved = 0;
+        private long _saved;
 
         #endregion
 
@@ -238,17 +252,10 @@ namespace WOptiPNG
             {
                 return _selectDirectoryCommand ?? (_selectDirectoryCommand = new RelayCommand(obj =>
                 {
-                    using (var ofd = new CommonOpenFileDialog
+                    string temp;
+                    if (SelectFolder(out temp))
                     {
-                        IsFolderPicker = true,
-                        InitialDirectory = OutputDirectory,
-                        Multiselect = false
-                    })
-                    {
-                        if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
-                        {
-                            OutputDirectory = ofd.FileName;
-                        }
+                        OutputDirectory = temp;
                     }
                 }));
             }
@@ -304,6 +311,42 @@ namespace WOptiPNG
                     {
                         StartProcessing();
                     }
+                }));
+            }
+        }
+
+        private RelayCommand _addWatchedFolderCommand;
+        public ICommand AddWatchedFolderCommand
+        {
+            get
+            {
+                return _addWatchedFolderCommand ?? (_addWatchedFolderCommand = new RelayCommand(obj =>
+                {
+                    string temp;
+                    if (SelectFolder(out temp))
+                    {
+                        WatchedFolders.Add(new WatchedDirectory {Path = temp, WatchSubfolders = false});
+                    }
+                }));
+            }
+        }
+
+        private RelayCommand _installServiceCommand;
+        public ICommand InstallServiceCommand
+        {
+            get
+            {
+                return _installServiceCommand ?? (_installServiceCommand = new RelayCommand(obj =>
+                {
+                    if (Program.ServiceInstalled)
+                    {
+                        Program.UninstallService();
+                    }
+                    else
+                    {
+                        Program.InstallAndStart();
+                    }
+                    OnPropertyChanged("InstallServiceButtonText");
                 }));
             }
         }
@@ -388,6 +431,25 @@ namespace WOptiPNG
                 return;
             }
             _files.Add(new OptimizationProcess(path, _settings));
+        }
+
+        private bool SelectFolder(out string path)
+        {
+            using (var ofd = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                InitialDirectory = OutputDirectory,
+                Multiselect = false
+            })
+            {
+                if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    path = ofd.FileName;
+                    return true;
+                }
+                path = null;
+                return false;
+            }
         }
     }
 }

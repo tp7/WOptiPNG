@@ -9,23 +9,36 @@ namespace WOptiPNG
 {
     public static class Program
     {
+        private const string ServiceName = "WOptiPNGService";
+
+        public static bool ServiceInstalled { get { return ServiceInstaller.ServiceIsInstalled(ServiceName); } }
+
+        public static void InstallAndStart()
+        {
+            var command = string.Format("{0} --background", Assembly.GetExecutingAssembly().Location);
+            ServiceInstaller.InstallAndStart(ServiceName, "WOptiPNG File Watcher", command);
+        }
+
+        public static void UninstallService()
+        {
+            ServiceInstaller.Uninstall(ServiceName);
+        }
+
         [STAThread]
         public static void Main(string[] args)
         {
             try
             {
-                const string serviceName = "WOptiPNGService";
                 if (args != null && args.Length > 0)
                 {
                     if (args.Any(f => "--install".Equals(f, StringComparison.OrdinalIgnoreCase)))
                     {
-                        var command = string.Format("{0} --background", Assembly.GetExecutingAssembly().Location);
-                        ServiceInstaller.InstallAndStart(serviceName, "WOptiPNG File Watcher", command);
+                        InstallAndStart();
                         return;
                     }
                     if (args.Any(f => "--uninstall".Equals(f, StringComparison.OrdinalIgnoreCase)))
                     {
-                        ServiceInstaller.Uninstall(serviceName);
+                        UninstallService();
                         return;
                     }
                     if (args.Any(f => "--background".Equals(f, StringComparison.OrdinalIgnoreCase)))
@@ -45,7 +58,7 @@ namespace WOptiPNG
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e.Message);
+                Trace.TraceError(e.Message);
             }
         }
     }

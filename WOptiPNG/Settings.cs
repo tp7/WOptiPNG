@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 
@@ -34,7 +36,7 @@ namespace WOptiPNG
         private static int DefaultOptLevel { get { return 2; } }
 
         //windows service settings
-        public ICollection<WatchedDirectory> WatchedFolders { get; set; }
+        public ObservableCollection<WatchedDirectory> WatchedFolders { get; set; }
         public int ServiceThreads { get; set; }
         public ProcessPriorityClass ServiceProcessPriority { get; set; }
         public int ServiceOptLevel { get; set; }
@@ -92,7 +94,6 @@ namespace WOptiPNG
             return names;
         }
 
-
         public void WriteToFile()
         {
             var folder = Path.GetDirectoryName(SettingsPath);
@@ -104,11 +105,9 @@ namespace WOptiPNG
             {
                 Directory.CreateDirectory(folder);
             }
-            using (var writter = new StreamWriter(SettingsPath))
-            {
-                var str = JsonConvert.SerializeObject(this, Formatting.Indented);
-                writter.Write(str);
-            }
+            FilterOutNonexistentFolders();
+            var str = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(SettingsPath, str);
         }
 
         private static string _settingsPath;
@@ -131,11 +130,24 @@ namespace WOptiPNG
             if (File.Exists(SettingsPath))
             {
                 var text = File.ReadAllText(SettingsPath);
-                return JsonConvert.DeserializeObject<Settings>(text);
+                var deserialised = JsonConvert.DeserializeObject<Settings>(text);
+                deserialised.FilterOutNonexistentFolders();
+                return deserialised;
             }
             var settings = new Settings();
             settings.WriteToFile();
             return settings;
+        }
+
+        private void FilterOutNonexistentFolders()
+        {
+            foreach (var wf in WatchedFolders.ToList())
+            {
+                if (!Directory.Exists(wf.Path))
+                {
+                    WatchedFolders.Remove(wf);
+                }
+            }
         }
     }
 }
