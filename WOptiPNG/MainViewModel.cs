@@ -323,7 +323,8 @@ namespace WOptiPNG
                 return _addWatchedFolderCommand ?? (_addWatchedFolderCommand = new RelayCommand(obj =>
                 {
                     string temp;
-                    if (SelectFolder(out temp))
+                    if (SelectFolder(out temp) &&
+                        !WatchedFolders.Any(f => f.Path.Equals(temp, StringComparison.OrdinalIgnoreCase)))
                     {
                         WatchedFolders.Add(new WatchedDirectory {Path = temp, WatchSubfolders = false});
                     }
