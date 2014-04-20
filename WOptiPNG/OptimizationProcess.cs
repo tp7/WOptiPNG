@@ -208,6 +208,11 @@ namespace WOptiPNG
             finally
             {
                 File.Delete(tempFile);
+                var bakPath = tempFile + ".bak";
+                if (File.Exists(bakPath))
+                {
+                    File.Delete(bakPath);
+                }
             }
         }
     }
