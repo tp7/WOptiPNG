@@ -22,6 +22,7 @@
                     d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
                     <Label Content="Optimization Level"/>
                     <ComboBox SelectedItem="{Binding OptLevel}">
+                        <system:Int32>0</system:Int32>
                         <system:Int32>1</system:Int32>
                         <system:Int32>2</system:Int32>
                         <system:Int32>3</system:Int32>
@@ -29,7 +30,6 @@
                         <system:Int32>5</system:Int32>
                         <system:Int32>6</system:Int32>
                         <system:Int32>7</system:Int32>
-                        <system:Int32>8</system:Int32>
                     </ComboBox>
                     <Label Content="Threads" />
                     <ComboBox SelectedItem="{Binding Threads}" Name="ThreadsBox" />
@@ -43,6 +43,7 @@
                     d:DataContext="{d:DesignInstance wOptiPng:MainViewModel}">
                     <Label Content="Optimization Level"/>
                     <ComboBox SelectedItem="{Binding ServiceOptLevel}">
+                        <system:Int32>0</system:Int32>
                         <system:Int32>1</system:Int32>
                         <system:Int32>2</system:Int32>
                         <system:Int32>3</system:Int32>
@@ -50,7 +51,6 @@
                         <system:Int32>5</system:Int32>
                         <system:Int32>6</system:Int32>
                         <system:Int32>7</system:Int32>
-                        <system:Int32>8</system:Int32>
                     </ComboBox>
                     <Label Content="Threads" />
                     <ComboBox SelectedItem="{Binding ServiceThreads}" Name="ServiceThreadsBox" />

@@ -49,8 +49,8 @@ namespace WOptiPNG
         public bool SettingsValid()
         {
             return Threads > 0 && ServiceThreads > 0 && 
-                OptLevel > 0 && OptLevel <= 8 &&
-                ServiceOptLevel > 0 && ServiceOptLevel <= 8;
+                OptLevel >= 0 && OptLevel <= 7 &&
+                ServiceOptLevel >= 0 && ServiceOptLevel <= 7;
         }
 
         public void ResetBrokenSettings()
@@ -59,7 +59,7 @@ namespace WOptiPNG
             {
                 Threads = DefaultThreads;
             }
-            if (OptLevel <= 0 || OptLevel > 8)
+            if (OptLevel < 0 || OptLevel > 7)
             {
                 OptLevel = DefaultOptLevel;
             }
@@ -67,7 +67,7 @@ namespace WOptiPNG
             {
                 ServiceThreads = DefaultServiceThreads;
             }
-            if (ServiceOptLevel <= 0 || ServiceOptLevel > 8)
+            if (ServiceOptLevel < 0 || ServiceOptLevel > 7)
             {
                 ServiceOptLevel = DefaultOptLevel;
             }
