@@ -94,6 +94,7 @@
                         Margin="6 5 12 5" IsEnabled="{Binding InProgress, Converter={StaticResource InverseBool}}"
                         Command="{Binding ClearFilesCommand}">Clear files</Button>
                 <Button Grid.Column="4" Grid.Row="1" Margin="6 5 12 5" Width="100"
+                        ToolTipService.ShowOnDisabled="True"
                         Content="{Binding StartButtonTitle}"
                         ToolTip="{Binding StartButtonTooltip}"
                         IsEnabled="{Binding StartButtonEnabled}" 
