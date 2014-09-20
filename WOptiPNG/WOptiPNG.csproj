@@ -97,9 +97,7 @@
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OptimizationService.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="OptimizationService.cs" />
     <Compile Include="ThrottledMethodCall.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

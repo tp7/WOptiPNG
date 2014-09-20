@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace WOptiPNG
 {
+    [System.ComponentModel.DesignerCategory("Code")]
     public class OptimizationService : ServiceBase
     {
         private readonly ConcurrentDictionary<FileSystemWatcher, WatchedDirectory> _watchers = new ConcurrentDictionary<FileSystemWatcher, WatchedDirectory>();
