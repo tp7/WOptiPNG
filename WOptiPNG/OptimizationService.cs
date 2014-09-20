@@ -14,7 +14,6 @@ namespace WOptiPNG
     public class OptimizationService : ServiceBase
     {
         private readonly ConcurrentDictionary<FileSystemWatcher, WatchedDirectory> _watchers = new ConcurrentDictionary<FileSystemWatcher, WatchedDirectory>();
-        private readonly ConcurrentQueue<string> _filesToProcess = new ConcurrentQueue<string>();
         private Settings _settings;
         private readonly FileSystemWatcher _settingsWatcher;
         private readonly ThrottledMethodCall _settingsReloader;
@@ -46,13 +45,11 @@ namespace WOptiPNG
             Program.WriteWindowsLog("Reloading settings",EventLogEntryType.Information);
 
             LoadSettings();
-            
-            foreach (var watcher in _watchers.Keys)
-            {
-                watcher.Dispose();
-            }
-            _watchers.Clear();
+
+            KillWatchers();
             CreateWatchers();
+            KillThreads();
+            CreateThreads(_settings.ServiceThreads);
         }
 
         private void CreateWatchers()
@@ -92,10 +89,111 @@ namespace WOptiPNG
             }
         }
 
+        private void KillWatchers()
+        {
+            foreach (var watcher in _watchers.Keys)
+            {
+                watcher.Dispose();
+            }
+            _watchers.Clear();
+        }
+
         protected override void OnStart(string[] args)
         {
             CreateWatchers();
+            CreateThreads(_settings.ServiceThreads);
             base.OnStart(args);
+        }
+        private readonly List<Thread> _backgroundThreads = new List<Thread>();
+
+        private void CreateThreads(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var thread = new Thread(() =>
+                {
+                    while (true)
+                    {
+                        Monitor.Enter(_filesToProcess);
+                        string path = null;
+
+                        try
+                        {
+                            while (_filesQueue.Count == 0)
+                                Monitor.Wait(_filesToProcess);
+
+                            path = _filesQueue.Dequeue();
+                            Monitor.Exit(_filesToProcess);
+
+                            int timeToWait;
+                            do
+                            {
+                                timeToWait = 500 - (int)(DateTime.UtcNow - File.GetLastWriteTimeUtc(path)).TotalMilliseconds;
+                                if (timeToWait <= 0 && IsFileLocked(path))
+                                    timeToWait = 500;
+                                if (timeToWait > 0)
+                                    Thread.Sleep(timeToWait);
+                            } while (timeToWait > 0);
+
+                            try
+                            {
+                                ProcessFile(path, _settings);
+                                Trace.WriteLine(string.Format("Successfully optimized file {0}", path));
+                            }
+                            catch (Exception e)
+                            {
+                                var message = string.Format("Error while processing files: {0}", e.Message);
+                                Program.WriteWindowsLog(message, EventLogEntryType.Error);
+                            }
+
+                        }
+                        finally
+                        {
+                            if (Monitor.IsEntered(_filesToProcess))
+                            {
+                                if (path != null)
+                                    _filesToProcess.Remove(path);
+                                Monitor.Exit(_filesToProcess);
+                            }
+                            else if (path != null)
+                            {
+                                lock (_filesToProcess)
+                                    _filesToProcess.Remove(path);
+                            }
+                        }
+                    }
+                });
+                _backgroundThreads.Add(thread);
+                thread.Start();
+            }
+        }
+
+        protected virtual bool IsFileLocked(string path)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+            return false;
+        }
+
+        private void KillThreads()
+        {
+            foreach (var thread in _backgroundThreads)
+            {
+                thread.Abort();
+            }
+            _backgroundThreads.Clear();
         }
 
         private static string ToCanonicalPath(string path)
@@ -105,10 +203,8 @@ namespace WOptiPNG
 
         protected override void OnStop()
         {
-            foreach (var watcher in _watchers.Keys)
-            {
-                watcher.Dispose();
-            }
+            KillThreads();
+            KillWatchers();
             _settingsWatcher.Dispose();
             base.OnStop();
         }
@@ -142,42 +238,19 @@ namespace WOptiPNG
             }
         }
 
-        private int _runningTasksCount;
+        private readonly Queue<string> _filesQueue = new Queue<string>();
+        private readonly HashSet<string> _filesToProcess = new HashSet<string>();
 
         private void PngFileCreated(object sender, FileSystemEventArgs e)
         {
-            _filesToProcess.Enqueue(e.FullPath);
-
-            if (_runningTasksCount >= _settings.ServiceThreads)
+            lock (_filesToProcess)
             {
-                return;
+                if (_filesToProcess.Contains(e.FullPath))
+                    return;
+                _filesToProcess.Add(e.FullPath);
+                _filesQueue.Enqueue(e.FullPath);
+                Monitor.Pulse(_filesToProcess);
             }
-
-            Interlocked.Increment(ref _runningTasksCount);
-
-            Task.Run(() =>
-            {
-                string path;
-                while (_filesToProcess.TryDequeue(out path))
-                {
-                    if ((DateTime.UtcNow - File.GetLastWriteTimeUtc(path)) < TimeSpan.FromMilliseconds(500))
-                    {
-                        _filesToProcess.Enqueue(path);
-                        Thread.Sleep(500);
-                        continue;
-                    }
-                    ProcessFile(path, _settings);
-                    Trace.WriteLine(string.Format("Successfully optimized file {0}", path));
-                }
-            }).ContinueWith(f =>
-            {
-                Interlocked.Decrement(ref _runningTasksCount);
-                if (f.Exception != null)
-                {
-                    var message = string.Format("Error while processing files: {0}", f.Exception.InnerException.Message);
-                    Program.WriteWindowsLog(message, EventLogEntryType.Error);
-                }
-            });
         }
 
         private static void ProcessFile(string inputPath, Settings settings)
