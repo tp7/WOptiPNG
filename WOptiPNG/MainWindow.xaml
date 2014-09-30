@@ -11,6 +11,7 @@
         Height="600"
         GlowBrush="#FF131313"
         ResizeMode="CanResizeWithGrip"
+        NonActiveWindowTitleBrush="#252525"
         NonActiveGlowBrush="{x:Null}"
         Width="800">
     
